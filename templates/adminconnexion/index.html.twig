@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion du site - Administration
+{% endblock %}
+
+{% block body %}
+	<div class="gestion-container">
+		<div class="pricing-header">
+			<h1>Gestion du site</h1>
+		</div>
+		<div class="admin-login-container">
+			<div class="admin-login-card">
+				<h2 class="admin-subtitle">Administrateur</h2>
+
+				<form method="post" action="{{ path('app_login_check') }}" class="admin-form">
+					<div class="form-group">
+						<input type="text" id="username" name="_username" class="form-control" placeholder="Nom de l’administrateur" required autofocus>
+					</div>
+
+					<div class="form-group">
+						<input type="password" id="password" name="_password" class="form-control" placeholder="Mot de passe" required>
+					</div>
+
+					<button type="submit" class="admin-login-btn">Se connecter</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% if error %}
+		<div class="error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+	{% endif %}
+{% endblock %}

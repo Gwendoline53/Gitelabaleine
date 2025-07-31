@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\AboutRepository;
+use App\Repository\HomeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AboutRepository::class)]
-class About
+#[ORM\Entity(repositoryClass: HomeRepository::class)]
+class Home
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,7 +21,7 @@ class About
     private ?string $locale = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $cle = null;
+    private ?string $key = null;
 
     public function getId(): ?int
     {
@@ -36,7 +36,6 @@ class About
     public function setContenu(string $contenu): static
     {
         $this->contenu = $contenu;
-
         return $this;
     }
 
@@ -48,19 +47,17 @@ class About
     public function setLocale(string $locale): static
     {
         $this->locale = $locale;
-
         return $this;
     }
 
-    public function getCle(): ?string
+    public function getKey(): ?string
     {
-        return $this->cle;
+        return $this->key;
     }
 
-    public function setCle(string $cle): static
+    public function setKey(string $key): static
     {
-        $this->cle = $cle;
-
+        $this->key = $key;
         return $this;
     }
 }
