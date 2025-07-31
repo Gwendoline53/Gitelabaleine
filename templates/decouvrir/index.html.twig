@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Découvrir{% endblock %}
+
+{% block body %}
+{% include 'navbar/index.html.twig' %}
+
+{% if mode_edition|default(false) %}
+<div class="locale-selector">
+    <a href="{{ path('admin_about', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_about', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+</div>
+{% endif %}
+
+<div class="Decouvrir-container">
+    <div class="Decouvrirdecor-wrapper">
+        <div class="Decouvrirdecor-gauche"></div>
+
+        <div class="Decouvrir-texte">
+            <h1 class="titreDecouvrir elegant-underline"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titre|default('Découvrir :')|raw }}
+            </h1>
+
+            <div class="texte-section">
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p1"{% endif %}>
+                    {{ contenus.p1|default("Blotti entre les frondaisons d’une forêt douce et les embruns de la mer toute proche, notre gîte vous accueille à La Baleine, charmant village du département de la Manche (50450), où le temps semble ralentir au rythme des saisons.")|raw }}
+                </p>
+
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p2"{% endif %}>
+                    {{ contenus.p2|default("Ici, le chant des oiseaux se mêle au murmure du vent dans les feuillages, et à quelques kilomètres, l’océan vous attend — sauvage, libre, toujours changeant. Niché dans un écrin de verdure, notre gîte est une parenthèse hors du tumulte, un lieu pour respirer, marcher, rêver.")|raw }}
+                </p>
+
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p3"{% endif %}>
+                    {{ contenus.p3|default("À l’aube, la lumière filtre à travers les arbres. À la tombée du jour, c’est la mer qui vous appelle pour une dernière promenade. Que vous veniez pour vous reposer, explorer les sentiers forestiers, découvrir les plages secrètes de la côte ou simplement vous reconnecter à l’essentiel, ce lieu a été pensé pour vous.")|raw }}
+                </p>
+
+                <div class="liste-atouts">
+                    <h2 class="titre-liste">🍃 Ce que vous trouverez ici :</h2>
+                    <ul {% if mode_edition|default(false) %}contenteditable="true" data-cle="p4"{% endif %}>
+                        <li>Une maison chaleureuse, mêlant confort moderne et charme rustique</li>
+                        <li>Une forêt à votre porte, idéale pour randonner, lire ou ne rien faire</li>
+                        <li>La mer à quelques minutes, avec ses plages paisibles et ses falaises</li>
+                        <li>Le calme absolu d’un village discret, à l’écart des foules</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="Decouvrirdecor-droite"></div>
+    </div>
+
+    <div class="Decouvrirdecor-bas"></div>
+</div>
+
+{% if mode_edition|default(false) %}
+<div class="btn-containervaliderDecouvrir">
+    <button id="btn-validerDecouvrir">Valider les modifications</button>
+</div>
+
+<script>
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        el.addEventListener('blur', () => {
+            const cle = el.dataset.cle;
+            const texte = el.innerHTML.trim();
+            const locale = '{{ locale|default("fr") }}';
+
+            fetch('{{ path("admin_update_contenu") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Erreur lors de la sauvegarde");
+                }
+            });
+        });
+    });
+
+    document.getElementById('btn-validerDecouvrir').addEventListener('click', () => {
+        window.location.href = '{{ path("admin_gestion") }}';
+    });
+</script>
+{% endif %}
+{% include 'footer/index.html.twig' %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos{% endblock %}
+
+{% block body %}
+{% include 'navbar/index.html.twig' %}
+{% if mode_edition|default(false) %}
+<div class="locale-selector">
+    <a href="{{ path('admin_about', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_about', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+</div>
+{% endif %}
+
+<div class="apropos-container">
+    <div class="decor-wrapper">
+        <div class="decor-gauche"></div>
+        <div class="apropos-texte">
+            <h1 class="titreapropos elegant-underline"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titre|default('À propos :')|raw }}
+            </h1>
+            <div>
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p1"{% endif %}>
+                    {{ contenus.p1|default('Née d\'une passion pour le service, la qualité et l\'élégance, Le gite La Baleine qui anticipe tous vos besoins avec disponibilité et bienveillance.')|raw }}
+                </p>
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p2"{% endif %}>
+                    {{ contenus.p2|default('Entre discrétion et engagement, exigence et empathie, nous vous accompagnons avec le plus haut niveau de professionnalisme, permettant ainsi à nos clients de vivre une expérience la plus simple et sereine possible.')|raw }}
+                </p>
+                <p {% if mode_edition|default(false) %}contenteditable="true" data-cle="p3"{% endif %}>
+                    {{ contenus.p3|default('Au-delà de la gestion logistique, nous nous attachons aux moindres détails pour une vie sublimée au quotidien.')|raw }}
+                </p>
+            </div>
+        </div>
+        <div class="decor-droite"></div>
+    </div>
+    <div class="decor-bas"></div>
+</div>
+
+{% if mode_edition|default(false) %}
+<div class="btn-containervalider">
+  <button id="btn-valider">Valider les modifications</button>
+</div>
+<script>
+  // Envoi automatique au blur
+  document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+      el.addEventListener('blur', () => {
+          const cle = el.dataset.cle;
+          const texte = el.innerText.trim();
+          const locale = '{{ locale|default('fr') }}';
+
+          fetch('{{ path("admin_update_contenu") }}', {
+              method: 'POST',
+              headers: {'Content-Type': 'application/json'},
+              body: JSON.stringify({cle: cle, texte: texte, locale: locale})
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (!data.success) {
+                  alert('Erreur lors de la sauvegarde');
+              }
+          });
+      });
+  });
+
+  // Redirection sur bouton valider
+  document.getElementById('btn-valider').addEventListener('click', () => {
+    window.location.href = '{{ path('admin_gestion') }}';
+  });
+</script>
+{% endif %}
+{% include 'footer/index.html.twig' %}
+{% endblock %}

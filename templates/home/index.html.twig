@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Acceuil
+{% endblock %}
+
+{% block body %}
+{% include 'navbar/index.html.twig' %}
+	<div class="page-wrapper">
+		<div class="logolabaleine"></div>
+		<div class="ecriturefond1"></div>
+		<button class="btnhome1" onclick="window.location.href='{{ path('app_decouvrir') }}'">Découvrir</button>
+		<div class="image1"></div>
+		<div class="ecriturefond2"></div>
+		<button class="btnhome2" onclick="window.location.href='{{ path('app_formulaire') }}'">Réserver</button>
+		<div class="fleure"></div>
+		<div class="image2"></div>
+		<button class="btnhome3" onclick="window.location.href='{{ path('app_decouvrir') }}'">En savoir plus</button>
+		<div class="image3"></div>
+		<div class="coquelico"></div>
+	</div>
+	{% include 'footer/index.html.twig' %}
+{% endblock %}

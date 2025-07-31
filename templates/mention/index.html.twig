@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales & Politique de confidentialité{% endblock %}
+
+{% block body %}
+{% include 'navbar/index.html.twig' %}
+<div class="mention-container">
+    <div class="mention-botanical mention-left">
+        <div class='Décoration-gauche-haute'></div>
+    </div>
+    <div class="mention-botanical mention-right">
+        <div class='Décoration-droite-haute'></div>
+    </div>
+
+
+    <div class="mention-main">
+        <h1 class="mention-title" role="heading" aria-level="1">
+            <div class="elegant-underline">{{ contenus.titremention1|default('Mentions légales')}}</div>
+            <span class="mention-ampersand">&</span>
+            <div class="elegant-underline">{{ contenus.titremention2|default('Politique de confidentialité')}}</div>
+        </h1>
+
+        <p class="mention-subtitle">{{ contenus.majdate|default('Dernière mise à jour :')}} {{ "now"|date("Y") }}</p>
+
+        <div class="mention-grid">
+            <div class="mention-column">
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention3|default('Éditeur du site')}}</h2>
+                    <div class="mention-content mention-text">
+
+                        <p>{{ contenus.pmention1|default('Gilae consiergerie')}}</p>
+                        <p>{{ contenus.pmention2|default('Consultante en stratégie')}}</p>
+                        <p>{{ contenus.pmention3|default('7 avenue La Fontaine Le Boeur')}}</p>
+                        <p>{{ contenus.pmention4|default('56100 - Lorient, Bretagne')}}</p>
+                        <p>{{ contenus.pmention5|default('SIRET : Votre numéro SIRET ici')}}</p>
+                        <p>{{ contenus.pmention6|default('Responsable de publication : Gilae consiergerie')}}</p>
+                    </div>
+                </section>
+
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention4|default('Propriété intellectuelle')}}</h2>
+                    <div class="mention-content mention-text">
+                        <p>{{ contenus.pmention7|default('Le site Internet, l\'ensemble de ses contenus et les données qui s\'y trouvent sont la propriété exclusive de Gilae consiergerie.')}}</p>
+                        <p>{{ contenus.pmention8|default('Affiliés en création graphique et conception réalisation graphique et sémiotic.')}}</p>
+                    </div>
+                </section>
+
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention5|default('Cookies')}}</h2>
+                    <div class="mention-content mention-text">
+                        <p>{{ contenus.pmention9|default('Ce site utilise des cookies pour améliorer votre expérience et analyser l\'audience. Vous pouvez à tout moment modifier vos préférences dans votre navigateur.')}}</p>
+                    </div>
+                </section>
+            </div>
+
+            <div class="mention-column">
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention6|default('Hébergement du site')}}</h2>
+                    <div class="mention-content mention-text">
+                        <p>{{ contenus.pmention10|default('Nom de l\'hebergeur')}}</p>
+                        <p>{{ contenus.pmention11|default('Téléphone')}} : {{ contenus.pmention12|default('+00 00 00 00 00')}}</p>
+                        <p>{{ contenus.pmention13|default('Adresse :')}} {{ contenus.pmention14|default('000 7nd st, 7 ème, NY')}}</p>
+                    </div>
+                </section>
+
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention7|default('Utilisation des données personnelles')}}</h2>
+                    <div class="mention-content mention-text">
+                        <p>{{ contenus.pmention14|default('Vos informations sont collectées dans le respect des réglementations sur le traitement des données personnelles.')}}</p>
+                        <p>{{ contenus.pmention15|default('Elles ne sont ni vendues, ni cédées à des tiers. Conservées de manière sécurisée, elles sont utilisées exclusivement dans le cadre de nos services conformément au RGPD. Vous disposez des droits d\'accès, rectification et suppression.')}}</p>
+                    </div>
+                </section>
+
+                <section class="mention-section">
+                    <h2>{{ contenus.titremention8|default('Limitation de responsabilité')}}</h2>
+                    <div class="mention-content mention-text">
+                        <p>{{ contenus.pmention16|default('Malgré le soin apporté à l\'actualisation des informations diffusées, nous ne garantissons pas leur exactitude. Les informations sont non contractuelles.')}}</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="mention-bottom-notice">
+            <p class="mention-notice">
+                {{ contenus.pmention17|default('Ces données ne sont ni vendues, ni cédées à des tiers. Elles sont utilisées conformément au RGPD et à nos conditions générales d\'utilisation, sous votre contrôle.')}}
+            </p>
+        </div>
+    </div>
+
+    <!-- Décorations bas -->
+    <div class="mention-botanical mention-bottom-left">
+        <div class='Décoration-gauche-bas'></div>
+    </div>
+    <div class="mention-botanical mention-bottom-right">
+        <div class='Décoration-droite-bas'></div>
+    </div>
+
+</div>
+{% endblock %}

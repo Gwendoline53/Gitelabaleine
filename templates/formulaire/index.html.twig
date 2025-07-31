@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nous contacter{% endblock %}
+
+{% block body %}
+{% include 'navbar/index.html.twig' %}
+
+	<div class="v1">
+
+		{# Décorations gauche et droite #}
+		<div class="image-containerformulaire gauche">
+			<div class="decorative-imageformulairegauche" alt="Décoration-gauche"></div>
+		</div>
+
+		<div class="image-containerformulaire droite">
+			<div class="decorative-imageformulairedroite" alt="Décoration-droite"></div>
+		</div>
+
+		<h1 class="titreformulaireformulaire">Nous Contacter</h1>
+		<div class="containerformulaire">
+
+			{% for label, messages in app.flashes %}
+				<div class="alert alert-{{ label }}">
+					{% for message in messages %}
+						{{ message }}
+					{% endfor %}
+				</div>
+			{% endfor %}
+
+			{{ form_start(form, {'attr': {'class': 'formulaire-form'}}) }}
+
+			<div class="input-group">
+				<div class="icon">✉️</div>
+				<div class="nousformulairedark-light">
+					{{ form_widget(form.fromEmail, {
+						'att': {
+							'placeholder': 'Entrer votre adresse mail...',
+							'required': true,
+						}
+					}) }}
+
+					{{ form_errors(form.fromEmail) }}
+				</div>
+			</div>
+
+			<div class="input-group">
+				<div class="icon">📞</div>
+				{{ form_widget(form.phoneNumber, {
+					'attr': {
+						'placeholder': 'Entrer votre numéro de téléphone...',
+						'required': true,
+					}
+				}) }}
+				{{ form_errors(form.phoneNumber) }}
+			</div>
+
+			<div class="input-group">
+				{{ form_widget(form.subject, {'attr': {'class': 'styled-select', 'required': true}}) }}
+				{{ form_errors(form.subject) }}
+			</div>
+
+			<div class="textarea-group">
+				{{ form_widget(form.body, {
+					'attr': {
+						'placeholder': 'Entrez votre demande...',
+						'rows': 8,
+						'required': true,
+					}
+				}) }}
+				{{ form_errors(form.body) }}
+			</div>
+
+			<button class="formulairebutton" type="submit">Envoyez</button>
+
+			{{ form_end(form) }}
+		</div>
+	</div>
+    {% include 'footer/index.html.twig' %}
+{% endblock %}

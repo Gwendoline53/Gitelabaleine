@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} navbarre {% endblock %}
+
+{% block body %}
+<header class="navbar">
+    <div class="navbar-container">
+        <nav class="navbar-links">
+            <a href="{{ path('app_home') }}">Accueil</a>
+            <a href="{{ path('app_about') }}">À propos</a>
+            <a href="{{ path('app_contact') }}">Contact</a>
+            <a href="{{ path('app_mention') }}">Mention legales</a>
+            <a href="{{ path('app_chambres') }}">Chambres</a>
+        </nav>
+    </div>
+</header>
+{% endblock %}
