@@ -1,20 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GestionController!{% endblock %}
+{% block title %}Gestion
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% include 'navbaradmin/index.html.twig' %}
+	<div class="gestion-container">
+		<div class="pricing-header">
+			<h1>Gestion du site</h1>
+			<img src="{{ asset('assets/images/gestion/flower.png') }}" class="header-image" alt="Fleur droite">
+		</div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/Gitelabaleine/src/Controller/GestionController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/Gitelabaleine/templates/gestion/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+		<div class="button-grid">
+			<div class="button-column">
+			{% if is_granted('ROLE_ADMIN') %}
+				<a href="{{ path('admin_home') }}" class="menu-button">Acceuil</a>
+				<a href="{{ path('admin_about') }}" class="menu-button">A propos</a>
+			</div>
+			<div class="button-column">
+				
+				<a href="{{ path('admin_temoignages') }}" class="menu-button">Avis</a>
+				<a href="{{ path('admin_contact') }}" class="menu-button">Contact</a>
+				<button class="btn-modifmdp button-grid " onclick="window.location.href='/admin/modifier-mot-de-passe'">Modifier Mot de passe</button>
+			{% endif %}
+			</div>
+		</div>
+	{% endblock %}

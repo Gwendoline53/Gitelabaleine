@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_ADMIN')]
 class ContactAdminController extends AbstractController
 {
-    #[Route('/admin/formulaire', name: 'admin_formulaire')]
+    #[Route('/admin/contact', name: 'admin_contact')]
     public function index(ContactRepository $contactRepository, Request $request): Response
     {
         $locale = $request->query->get('locale', 'fr');
@@ -31,14 +31,14 @@ class ContactAdminController extends AbstractController
             $contact->setTitre('Contacts'); // Valeur par défaut
         }
 
-        return $this->render('pages/formulaire/formulaire.html.twig', [
+        return $this->render('contact/index.html.twig', [
             'contact' => $contact,
             'locale' => $locale,
             'mode_edition' => true,
         ]);
     }
 
-    #[Route('/admin/formulaire/update', name: 'admin_formulaire_update', methods: ['POST'])]
+    #[Route('/admin/contact/update', name: 'admin_contact_update', methods: ['POST'])]
     public function update(Request $request, ContactRepository $contactRepository, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);

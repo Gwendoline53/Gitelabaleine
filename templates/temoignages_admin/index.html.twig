@@ -1,20 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TemoignagesAdminController!{% endblock %}
+{% block title %}Administration des témoignages{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% if mode_edition|default(false) %}
+<div class="locale-selector">
+    <a href="{{ path('admin_about', {locale: 'fr'}) }}">Français</a> | 
+    <a href="{{ path('admin_about') ~ '?locale=en' }}">English</a>
+</div>
+{% endif %}
+<div class="testimonials-containertemoiniage">
+    <div class="testimonials-wrappertemoiniage">
+        <div class="headertemoiniage">
+            <div class="leaf-decorationtemoignageleft">
+                <img src="{{ asset('assets/images/temoiniage/plg.webp') }}" alt="logo gauche">
+            </div>
+            <div class="leaf-decorationtemoiniageright">
+                <img src="{{ asset('assets/images/temoiniage/pld.webp') }}" alt="logo droite">
+            </div>
+            <h1 class="titletemoiniage ">Gestion des témoignages</h1>
+        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="testimonials-listtemoiniage">
+            {% for temoignage in temoignages %}
+                <div class="testimonial-itemtemoiniage">
+                    <div class="testimonial-cardtemoiniage">
+                        <p class="testimonial-texttemoiniage">{{ temoignage.message }}</p>
+                        <div class="stars">
+                            {% for i in 1..temoignage.note %}
+                                <span class="star filledtemoiniage">★</span>
+                            {% endfor %}
+                            {% for i in (temoignage.note + 1)..5 %}
+                                <span class="star">☆</span>
+                            {% endfor %}
+                        </div>
+                        <p class="testimonial-nametemoiniage">{{ temoignage.nom }}</p>
+                        <p class="approval-status">
+                            <strong>Statut :</strong> 
+                            {{ temoignage.isApproved ? '✅ Approuvé' : '⛔️ Non approuvé' }}
+                        </p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/Gitelabaleine/src/Controller/TemoignagesAdminController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/Gitelabaleine/templates/temoignages_admin/index.html.twig</code></li>
-    </ul>
+                        <div class="admin-actions">
+                            {% if not temoignage.isApproved %}
+                                <form action="{{ path('admin_temoignage_approve', {'id': temoignage.id}) }}" method="post" style="display:inline">
+                                    <button type="submit" class ="btn-validerRefuserSupprimerTemoignages">✅ Valider</button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('admin_temoignage_disapprove', {'id': temoignage.id}) }}" method="post" style="display:inline">
+                                    <button type="submit" class ="btn-validerRefuserSupprimerTemoignages">⛔️ Refuser</button>
+                                </form>
+                            {% endif %}
+
+                            <form action="{{ path('admin_temoignage_delete', {'id': temoignage.id}) }}" method="post" style="display:inline" onsubmit="return confirm('Supprimer ce témoignage ?');">
+                                <button type="submit" class ="btn-validerRefuserSupprimerTemoignages">🗑️ Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    {% if not loop.last %}
+                        <div class="separatortemoiniage">
+                            <div class="dottemoiniage"></div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p style="text-align: center;">Aucun témoignage pour le moment.</p>
+            {% endfor %}
+        </div>
+
+        <div class="footertemoiniage">
+            <div class="leaf-decorationtemoiniage">
+                <img src="{{ asset('assets/images/temoiniage/logofooter.webp') }}" alt="logo fin de page">
+            </div>
+        </div>
+        <button class="btn-containerRetourtemoignage btn-Retourtemoignage" onclick="window.location.href='{{ path('admin_gestion') }}'">Retour Gestion du site</button>
+    </div>
 </div>
 {% endblock %}

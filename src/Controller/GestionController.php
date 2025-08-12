@@ -16,7 +16,7 @@ final class GestionController extends AbstractController
     public function index(StatisticsService $stats): Response
     {
         $stats->recordVisit('app_gestion');
-        return $this->render('pages/gestion/index.html.twig', [
+        return $this->render('gestion/index.html.twig', [
             'controller_name' => 'GestionController',
         ]);
     }
@@ -24,7 +24,7 @@ final class GestionController extends AbstractController
     // === ROUTES D'ÉDITION ===
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/home', name: 'admin_gestion_home')]
+    #[Route('/admin/gestion/home', name: 'admin_home')]
     public function editHome(ContentService $contentService): Response
     {
         return $this->render('home/index.html.twig', [
@@ -34,40 +34,10 @@ final class GestionController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/about', name: 'admin_gestion_about')]
+    #[Route('/admin/gestion/about', name: 'admin_about')]
     public function editAbout(ContentService $contentService): Response
     {
         return $this->render('about/index.html.twig', [
-            'contenus' => $contentService->getAll(),
-            'mode_edition' => true,
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/service', name: 'admin_gestion_service')]
-    public function editService(ContentService $contentService): Response
-    {
-        return $this->render('service/index.html.twig', [
-            'contenus' => $contentService->getAll(),
-            'mode_edition' => true,
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/tarifs', name: 'admin_gestion_tarifs')]
-    public function editTarifs(ContentService $contentService): Response
-    {
-        return $this->render('tarifs/index.html.twig', [
-            'contenus' => $contentService->getAll(),
-            'mode_edition' => true,
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/faq', name: 'admin_gestion_faq')]
-    public function editFaq(ContentService $contentService): Response
-    {
-        return $this->render('faq/index.html.twig', [
             'contenus' => $contentService->getAll(),
             'mode_edition' => true,
         ]);
@@ -84,10 +54,10 @@ final class GestionController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/gestion/formulaire', name: 'admin_gestion_formulaire')]
-    public function editFormulaire(ContentService $contentService): Response
+    #[Route('/admin/gestion/contact', name: 'admin_contact')]
+    public function editContact(ContentService $contentService): Response
     {
-        return $this->render('formulaire/index.html.twig', [
+        return $this->render('contact/index.html.twig', [
             'contenus' => $contentService->getAll(),
             'mode_edition' => true,
         ]);

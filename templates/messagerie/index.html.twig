@@ -1,20 +1,156 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MessagerieController!{% endblock %}
+{% block title %}Messagerie{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% include 'navbaradmin/index.html.twig' %}
+{% for label, messages in app.flashes %}
+  <div class="alert alert-{{ label }}">
+    {% for msg in messages %}
+      {{ msg }}
+    {% endfor %}
+  </div>
+{% endfor %}
+<div class="containermessagerie">
+  <header class="headermessagerie">
+    <h1 class="titlemessagerie">Messagerie</h1>
+    <div class="decorativemessagerie-divider">
+      <div class="arrowmessagerie-line">
+        <img src="{{ asset('assets/images/messagerie/flower.png') }}" class="header-image" alt="Fleur droite">
+      </div>
+    </div>
+    <div class="mailmessagerie-icon">✉</div>
+  </header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+  <nav class="navigationmessagerie"></nav>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/laragon/www/Gitelabaleine/src/Controller/MessagerieController.php</code></li>
-        <li>Your template at <code>C:/laragon/www/Gitelabaleine/templates/messagerie/index.html.twig</code></li>
-    </ul>
+  <form method="get" action="{{ path('admin_messagerie') }}">
+  <select name="sort" onchange="this.form.submit()" class="sortmessagerie-btn">
+    <option value="">-- Trier par --</option>
+    <option value="date_asc" {{ app.request.get('sort') == 'date_asc' ? 'selected' }}>Date croissante</option>
+    <option value="date_desc" {{ app.request.get('sort') == 'date_desc' ? 'selected' }}>Date décroissante</option>
+    <option value="Réservation" {{ app.request.get('sort') == 'Réservation' ? 'selected' }}>Réservation</option>
+    <option value="Questions" {{ app.request.get('sort') == 'Questions' ? 'selected' }}>Questions</option>
+    <option value="Autre" {{ app.request.get('sort') == 'Autre' ? 'selected' }}>Autre</option>
+  </select>
+</form>
+
+  <div class="columns-titles">
+    <div>Messages reçus :</div>
+    <div>Archives :</div>
+  </div>
+
+  <main class="main-contentmessagerie">
+    <!-- Colonne des messages reçus -->
+    <div class="messages-column">
+      <div class="message-area">
+        {% set unreadMessages = messages|filter(m => not m.isRead) %}
+        {% if unreadMessages is empty %}
+          <p>Aucun message reçu.</p>
+        {% else %}
+          {% for message in unreadMessages %}
+            <div class="message-card" 
+                 style="cursor:pointer;"
+                 data-subject="{{ message.subject|e('html_attr') }}"
+                 data-from="{{ message.fromEmail|e('html_attr') }}"
+                 data-date="{{ message.receivedAt|date('d/m/Y H:i') }}"
+                 data-body="{{ message.body|e('html_attr') }}">
+              <p><strong>De :</strong> {{ message.fromEmail }}</p>
+              <p><strong>Sujet :</strong> {{ message.subject }}</p>
+              <p><strong>Message :</strong> {{ message.body|u.truncate(100, '...') }}</p>
+              <p><strong>Reçu le :</strong> {{ message.receivedAt|date('d/m/Y H:i') }}</p>
+
+              <form method="post" action="{{ path('admin_messageriearchive', { id: message.id }) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ message.id) }}">
+                <button type="submit" class="btnMessagerie">Archiver</button>
+                <a href="{{ path('admin_messagerie_reply', { id: message.id }) }}" class="btnMessagerie">Répondre</a>
+              </form>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Colonne des archives -->
+    <div class="archives-column">
+      <div class="archives-area">
+        {% set readMessages = messages|filter(m => m.isRead) %}
+        {% if readMessages is empty %}
+          <p>Aucun message archivé.</p>
+        {% else %}
+          {% for message in readMessages %}
+            <div class="message-card archived"
+                 style="cursor:pointer;"
+                 data-subject="{{ message.subject|e('html_attr') }}"
+                 data-from="{{ message.fromEmail|e('html_attr') }}"
+                 data-date="{{ message.receivedAt|date('d/m/Y H:i') }}"
+                 data-body="{{ message.body|e('html_attr') }}">
+              <p><strong>De :</strong> {{ message.fromEmail }}</p>
+              <p><strong>Sujet :</strong> {{ message.subject }}</p>
+              <p><strong>Message :</strong> {{ message.body|u.truncate(100, '...') }}</p>
+              <p><strong>Reçu le :</strong> {{ message.receivedAt|date('d/m/Y H:i') }}</p>
+
+              <form method="post" action="{{ path('admin_messagerie_desarchiver', { id: message.id }) }}" style="display:inline-block;">
+                <input type="hidden" name="_token" value="{{ csrf_token('desarchiver' ~ message.id) }}">
+                <button type="submit" class="btnMessagerie">Désarchiver</button>
+              </form>
+
+              <form method="post" action="{{ path('admin_messagerie_supprimer', { id: message.id }) }}" style="display:inline-block;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('supprimer' ~ message.id) }}">
+                <button type="submit" class="btnMessagerie btn-danger">Supprimer</button>
+              </form>
+
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </main>
 </div>
+
+<!-- Modale cachée par défaut -->
+<div id="messageModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" id="modalCloseBtn">&times;</span>
+    <h3 id="modalSubject"></h3>
+    <p><strong>De :</strong> <span id="modalFrom"></span></p>
+    <p><strong>Reçu le :</strong> <span id="modalDate"></span></p>
+    <hr>
+    <p id="modalBody"></p>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.message-card').forEach(card => {
+    card.addEventListener('click', () => {
+      // Récupérer les données
+      const subject = card.dataset.subject;
+      const from = card.dataset.from;
+      const date = card.dataset.date;
+      const body = card.dataset.body;
+
+      // Remplir la modale
+      document.getElementById('modalSubject').textContent = subject;
+      document.getElementById('modalFrom').textContent = from;
+      document.getElementById('modalDate').textContent = date;
+      document.getElementById('modalBody').textContent = body;
+
+      // Afficher la modale
+      document.getElementById('messageModal').style.display = 'flex';
+    });
+  });
+
+  // Fermer la modale au clic sur la croix
+  document.getElementById('modalCloseBtn').addEventListener('click', () => {
+    document.getElementById('messageModal').style.display = 'none';
+  });
+
+  // Fermer la modale si clic en dehors du contenu
+  window.addEventListener('click', (event) => {
+    const modal = document.getElementById('messageModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+</script>
+
 {% endblock %}

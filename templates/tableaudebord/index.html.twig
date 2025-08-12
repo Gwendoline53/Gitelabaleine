@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord
+{% endblock %}
+
+{% block body %}
+{% include 'navbaradmin/index.html.twig' %}
+	<div class="containertbdb">
+		<header class="headertbdb">
+			<h1 class="titletbdb">Tableau de bord</h1>
+			<div class="decorative-elementtbdb">
+				<img src="{{ asset('assets/images/messagerie/flower.png') }}" class="headertbdb-image" alt="Fleur droite">
+			</div>
+		</header>
+		<main class="tbdb-grid">
+			<a href="/admin/gestion" class="cardtbdb">
+				<div class="cardtbdb-icon">
+					<span class="icontbdb">⚙</span>
+				</div>
+				<h2 class="cardtbdb-title">Gestion du site</h2>
+				<ul class="cardtbdb-content">
+					<li>Modifier les pages du site</li>
+					<li>Mettre à jour le contenu</li>
+				</ul>
+			</a>
+
+			<a href="/admin/messagerie" class="cardtbdb">
+				<div class="cardtbdb-icon">
+					<span class="icontbdb">✉</span>
+				</div>
+				<h2 class="cardtbdb-title">Messagerie</h2>
+				<ul class="cardtbdb-content">
+					<li>Consulter les messages</li>
+					<li>Archiver des messages</li>
+				</ul>
+			</a>
+
+			<a href="/admin/stats" class="cardtbdb2">
+				<div class="cardtbdb2-icon">
+					<img src="{{ asset('assets/images/Tableaudebord/tableau.png') }}" class="icontbdb2" alt="icone">
+				</div>
+				<h2 class="cardtbdb2-title">Statistiques</h2>
+				<ul class="cardtbdb2-content">
+					<li>Nombre de visites</li>
+					<li>Pages consultées</li>
+				</ul>
+			</a>
+		</a>
+	</main>
+</div>
+{% endblock %}

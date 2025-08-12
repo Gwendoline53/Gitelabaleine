@@ -6,8 +6,8 @@
 {% include 'navbar/index.html.twig' %}
 {% if mode_edition|default(false) %}
 <div class="locale-selector">
-    <a href="{{ path('admin_about', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
-    <a href="{{ path('admin_about', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+    <a href="{{ path('admin_about', {locale: 'fr'}) }}">Français</a> | 
+    <a href="{{ path('admin_about', {locale: 'En'}) }}">English</a>
 </div>
 {% endif %}
 

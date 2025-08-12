@@ -6,8 +6,8 @@
 {% include 'navbar/index.html.twig' %}
 {% if mode_edition|default(false) %}
 <div class="locale-selector">
-    <a href="{{ path('admin_contact', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
-    <a href="{{ path('admin_contact', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+    <a href="{{ path('admin_contact', {locale: 'fr'}) }}">Français</a> | 
+    <a href="{{ path('admin_contact', {locale: 'En'}) }}">English</a>
 </div>
 {% endif %}
 <div class="contact-container">
@@ -65,8 +65,8 @@
 </main>
 
 {% if mode_edition|default(false) %}
-<div class="btn-container-valider-contact">
-  <button id="btn-valider-contact">Valider les modifications</button>
+<div class="btn-containervalidercontact">
+  <button id="btn-validercontact">Valider les modifications</button>
 </div>
 <script>
   // Envoi automatique au blur
@@ -90,7 +90,7 @@
       });
   });
 
-  document.getElementById('btn-valider-contact').addEventListener('click', () => {
+  document.getElementById('btn-validercontact').addEventListener('click', () => {
     window.location.href = '{{ path('admin_gestion') }}';
   });
 </script>

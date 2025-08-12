@@ -24,7 +24,7 @@ class TemoignagesAdminController extends AbstractController
         // Récupération des témoignages selon la langue
         $temoignages = $repository->findBy(['locale' => $locale], ['createdAt' => 'DESC']);
 
-        return $this->render('pages/temoignages/temoignages.html.twig', [
+        return $this->render('temoignages_admin/index.html.twig', [
             'temoignages' => $temoignages,
             'locale' => $locale,
         ]);

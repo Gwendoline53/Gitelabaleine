@@ -3,6 +3,12 @@
 {% block title %}Nous contacter{% endblock %}
 
 {% block body %}
+{% if mode_edition|default(false) %}
+<div class="locale-selector">
+    <a href="{{ path('admin_formulaire', {locale: 'fr'}) }}">Français</a> | 
+    <a href="{{ path('admin_formulaire', {locale: 'En'}) }}">English</a>
+</div>
+{% endif %}
 {% include 'navbar/index.html.twig' %}
 
 	<div class="v1">

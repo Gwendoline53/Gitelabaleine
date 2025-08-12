@@ -4,16 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\ReplyType;
+use Symfony\Component\Mime\Email;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MessagerieController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/messagerie', name: 'admin_messagerie', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $em): Response
     {

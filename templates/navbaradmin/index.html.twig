@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} navbarre {% endblock %}
+
+{% block body %}
+<header class="navbar">
+    <div class="navbar-container">
+    <div class="navbaradmin-left">
+				<button type="button" onclick="window.location.href='{{ path('app_home') }}'" style="background:none; border:none; padding:0; cursor:pointer;">
+					<img src="{{ asset('assets/images/logo/logolabalaine.png') }}" alt="Logo de Gilaë" height="80">
+				</button>
+			</div>
+        <nav class="navbar-links">
+            <a href="{{ path('admin_tableaudebord') }}">Tableau de bord</a>
+            <a href="{{ path('admin_messagerie') }}">Messagerie</a>
+            <a href="{{ path('admin_stats') }}">Statistique</a>
+            <a href="{{ path('admin_gestion') }}">Gestion</a>
+        </nav>
+    </div>
+</header>
+{% endblock %}

@@ -1,5 +1,3 @@
-parameters:
-
 services:
     _defaults:
         autowire: true
@@ -7,7 +5,27 @@ services:
 
     App\:
         resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
 
     App\Service\StatisticsService:
         arguments:
-            $dataFile: '%kernel.project_dir%/data/stats.json'
+            $dataFile: '%kernel.project_dir%/var/stats.json'
+
+    App\EventListener\StatisticsListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
+
+    App\EventListener\LocaleListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    # ✅ Ajout : permet d'autowirer LogoutUrlGenerator
+    Symfony\Component\Security\Http\Logout\LogoutUrlGenerator:
+        alias: security.logout_url_generator

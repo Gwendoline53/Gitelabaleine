@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Répondre au message{% endblock %}
+
+{% block body %}
+  <div class="messagerie-reponse-container">
+    <h1 class="messagerie-reponse-titre">Répondre au message de {{ message.fromEmail }}</h1>
+
+    <div class="messagerie-reponse-infos">
+      <p class="messagerie-reponse-sujet"><strong>Sujet :</strong> {{ message.subject }}</p>
+      <p class="messagerie-reponse-body"><strong>Message :</strong><br>{{ message.body }}</p>
+    </div>
+
+    <div class="messagerie-reponse-formulaire">
+      {{ form_start(form, {'attr': {'class': 'form-reponse'}}) }}
+        {{ form_widget(form, {'attr': {'class': 'form-widget-reponse'}}) }}
+        <button type="submit" class="btnMessageriereponse">Envoyer la réponse</button>
+      {{ form_end(form) }}
+    </div>
+
+    <a href="{{ path('admin_messagerie') }}" class="lien-retour-messagerie">⬅ Retour à la messagerie</a>
+  </div>
+{% endblock %}

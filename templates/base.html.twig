@@ -14,6 +14,14 @@
       <link rel="stylesheet" href="{{ asset('assets/css/footer.css') }}?v={{ "now"|date("U") }}">
       <link rel="stylesheet" href="{{ asset('assets/css/formulaire.css') }}?v={{ "now"|date("U") }}">
       <link rel="stylesheet" href="{{ asset('assets/css/adminconnexion.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/tableaudebord.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/navbaradmin.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/gestion.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/messagerie.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/statistics.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/gestion.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/temoignages.css') }}?v={{ "now"|date("U") }}">
+
 
 
       <link href="https://fonts.googleapis.com/css2?family=Mea+Culpa&display=swap" rel="stylesheet">
@@ -24,5 +32,16 @@
   </head>
   <body>
     {% block body %}{% endblock %}
+
+{% block javascripts %}
+    <script>
+        // LANGUE
+        function changeLanguage(selectElement) {
+            const selectedLocale = selectElement.value;
+            window.location.href = '/change-locale/' + selectedLocale;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+{% endblock %}
   </body>
 </html>

@@ -13,5 +13,11 @@
             <a href="{{ path('app_chambres') }}">Chambres</a>
         </nav>
     </div>
+    <div class="language-select">
+				<select id="language-selector" onchange="changeLanguage(this)">
+					<option value="fr" {% if app.request.locale == 'fr' %} selected {% endif %}>Français</option>
+					<option value="en" {% if app.request.locale == 'en' %} selected {% endif %}>English</option>
+				</select>
+	</div>
 </header>
 {% endblock %}

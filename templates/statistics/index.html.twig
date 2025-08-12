@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statistiques
+{% endblock %}
+
+{% block body %}
+{% include 'navbaradmin/index.html.twig' %}
+	<div class="containerstatistics">
+		<div class="stats-cardstatistics">
+			<div class="headerstatistics">
+				<h1 class="titlestatistics">Statistiques</h1>
+				<div class="decorative-arrowsstatistics"></div>
+			</div>
+			<div style="text-align: center;">
+				<a href="{{ path('admin_stats') }}" class="refresh-buttonstasts">🔄 Actualiser</a>
+			</div>
+			<!-- Container principal des statistiques -->
+			<div class="stats-containerstatistics">
+				<h2 class="section-titlestatistics">Pages :</h2>
+
+				<!-- Total des visites -->
+				<div class="total-visitsstatistics">
+					<h3>Total des visites</h3>
+					<div class="number">{{ stats.total }}</div>
+				</div>
+
+				<!-- Liste des pages avec barres de progression -->
+				<div class="stats-liststatistics">
+					{% for page in stats.pages %}
+						<div class="stat-itemstatistics">
+							<div class="stat-headerstatistics">
+								<div class="page-infostatistics">
+									<span class="page-namestatistics">{{ page.name }}</span>
+									<span class="visit-countstatistics">{{ page.visits }}
+										visites</span>
+								</div>
+								<span class="percentagestatistics">{{ page.percentage }}%</span>
+							</div>
+							<div class="progress-barstatistics">
+								<div class="progress-fillstatistics" style="width: {{ page.percentage }}%"></div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+			<!-- Footer -->
+			<div class="footerstatistics">
+				<p>Données mises à jour en temps réel • Dernière mise à jour :
+					{{ lastUpdate }}</p>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		function updateStats() {
+            fetch('{{ path('stats_api') }}').then(response => response.json()).then(data => { // Met à jour le total
+            document.querySelector('.total-visitsstatistics .number').textContent = data.stats.total;
+
+            // Met à jour les pages
+            const items = document.querySelectorAll('.stat-itemstatistics');
+            data.stats.pages.forEach((page, index) => {
+            const item = items[index];
+            if (item) {
+            item.querySelector('.visit-countstatistics').textContent = page.visits + ' visites';
+            item.querySelector('.percentagestatistics').textContent = page.percentage + '%';
+            item.querySelector('.progress-fillstatistics').style.width = page.percentage + '%';
+            }
+            });
+
+            // Met à jour l'heure réelle de dernière mise à jour
+            const footer = document.querySelector('.footerstatistics p');
+            footer.textContent = 'Données mises à jour en temps réel • Dernière mise à jour : ' + data.lastUpdate;
+            }).catch(error => console.error('Erreur lors de la mise à jour:', error));
+            }
+	</script>
+{% endblock %}
