@@ -3,83 +3,104 @@
 {% block title %}Nous contacter{% endblock %}
 
 {% block body %}
+{{ render(path('app_navbar')) }}
 {% if mode_edition|default(false) %}
 <div class="locale-selector">
-    <a href="{{ path('admin_formulaire', {locale: 'fr'}) }}">Français</a> | 
-    <a href="{{ path('admin_formulaire', {locale: 'En'}) }}">English</a>
+    <a href="{{ path('app_formulaire', {locale: 'fr'}) }}">Français</a> | 
+    <a href="{{ path('app_formulaire', {locale: 'en'}) }}">English</a>
 </div>
 {% endif %}
 {% include 'navbar/index.html.twig' %}
 
-	<div class="v1">
+<div class="v1">
 
-		{# Décorations gauche et droite #}
-		<div class="image-containerformulaire gauche">
-			<div class="decorative-imageformulairegauche" alt="Décoration-gauche"></div>
-		</div>
+    <div class="image-containerformulaire gauche">
+        <div class="decorative-imageformulairegauche" alt="Décoration-gauche"></div>
+    </div>
 
-		<div class="image-containerformulaire droite">
-			<div class="decorative-imageformulairedroite" alt="Décoration-droite"></div>
-		</div>
+    <div class="image-containerformulaire droite">
+        <div class="decorative-imageformulairedroite" alt="Décoration-droite"></div>
+    </div>
 
-		<h1 class="titreformulaireformulaire">Nous Contacter</h1>
-		<div class="containerformulaire">
+    <h1 class="titreformulaireformulaire">Nous Contacter</h1>
+    <div class="containerformulaire">
 
-			{% for label, messages in app.flashes %}
-				<div class="alert alert-{{ label }}">
-					{% for message in messages %}
-						{{ message }}
-					{% endfor %}
-				</div>
-			{% endfor %}
+        {% for label, messages in app.flashes %}
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endfor %}
 
-			{{ form_start(form, {'attr': {'class': 'formulaire-form'}}) }}
+        {{ form_start(form, {'attr': {'class': 'formulaire-form'}}) }}
 
-			<div class="input-group">
-				<div class="icon">✉️</div>
-				<div class="nousformulairedark-light">
-					{{ form_widget(form.fromEmail, {
-						'attr': {
-							'placeholder': 'Entrer votre adresse mail...',
-							'required': true,
-						}
-					}) }}
+        <div class="input-group">
+            <div class="icon">✉️</div>
+            <div class="nousformulairedark-light">
+                {{ form_widget(form.fromEmail, {
+                    'attr': {'placeholder': 'Entrer votre adresse mail...', 'required': true}
+                }) }}
+                {{ form_errors(form.fromEmail) }}
+            </div>
+        </div>
 
-					{{ form_errors(form.fromEmail) }}
-				</div>
-			</div>
+        <div class="input-group">
+            <div class="icon">📞</div>
+            {{ form_widget(form.phoneNumber, {
+                'attr': {'placeholder': 'Entrer votre numéro de téléphone...', 'required': false}
+            }) }}
+            {{ form_errors(form.phoneNumber) }}
+        </div>
 
-			<div class="input-group">
-				<div class="icon">📞</div>
-				{{ form_widget(form.phoneNumber, {
-					'attr': {
-						'placeholder': 'Entrer votre numéro de téléphone...',
-						'required': true,
-					}
-				}) }}
-				{{ form_errors(form.phoneNumber) }}
-			</div>
+        <div class="input-group">
+            {{ form_widget(form.subject, {'attr': {'class': 'styled-select', 'required': true}}) }}
+            {{ form_errors(form.subject) }}
+        </div>
 
-			<div class="input-group">
-				{{ form_widget(form.subject, {'attr': {'class': 'styled-select', 'required': true}}) }}
-				{{ form_errors(form.subject) }}
-			</div>
+        <div class="input-group" id="chambre-group" style="display:none;">
+            {{ form_label(form.chambre) }}
+            {{ form_widget(form.chambre, {'attr': {'class': 'styled-select'}}) }}
+            {{ form_errors(form.chambre) }}
+        </div>
 
-			<div class="textarea-group">
-				{{ form_widget(form.body, {
-					'attr': {
-						'placeholder': 'Entrez votre demande...',
-						'rows': 8,
-						'required': true,
-					}
-				}) }}
-				{{ form_errors(form.body) }}
-			</div>
+        <div class="textarea-group">
+            {{ form_widget(form.body, {
+                'attr': {
+                    'placeholder': 'Entrez votre demande...',
+                    'rows': 8,
+                    'required': true,
+                }
+            }) }}
+            {{ form_errors(form.body) }}
+        </div>
 
-			<button class="formulairebutton" type="submit">Envoyez</button>
+        <button class="formulairebutton" type="submit">Envoyez</button>
 
-			{{ form_end(form) }}
-		</div>
-	</div>
-    {% include 'footer/index.html.twig' %}
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+{% include 'footer/index.html.twig' %}
+
+<script>
+    // JS pour afficher / cacher le champ chambre selon le sujet sélectionné
+    document.addEventListener('DOMContentLoaded', function () {
+        const subjectSelect = document.querySelector('select[name="{{ form.subject.vars.full_name }}"]');
+        const chambreGroup = document.getElementById('chambre-group');
+
+        function toggleChambre() {
+            if(subjectSelect.value === 'reservation') {
+                chambreGroup.style.display = 'block';
+            } else {
+                chambreGroup.style.display = 'none';
+            }
+        }
+
+        subjectSelect.addEventListener('change', toggleChambre);
+        toggleChambre(); // appel au chargement pour afficher ou cacher suivant valeur par défaut
+    });
+</script>
+
 {% endblock %}

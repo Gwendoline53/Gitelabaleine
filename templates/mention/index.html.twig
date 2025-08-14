@@ -9,7 +9,7 @@
     <a href="{{ path('admin_mention', {locale: 'En'}) }}">English</a>
 </div>
 {% endif %}
-{% include 'navbar/index.html.twig' %}
+{{ render(path('app_navbar')) }}
 <div class="mention-container">
     <div class="mention-botanical mention-left">
         <div class='Décoration-gauche-haute'></div>

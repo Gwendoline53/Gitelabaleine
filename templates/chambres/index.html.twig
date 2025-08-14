@@ -3,7 +3,7 @@
 {% block title %}Chambres{% endblock %}
 
 {% block body %}
-{% include 'navbar/index.html.twig' %}
+{{ render(path('app_navbar')) }}
 <div class="chambres-container">
     <h1>Liste des Chambres</h1>
 

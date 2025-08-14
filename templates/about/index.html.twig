@@ -3,7 +3,7 @@
 {% block title %}À propos{% endblock %}
 
 {% block body %}
-{% include 'navbar/index.html.twig' %}
+{{ render(path('app_navbar')) }}
 {% if mode_edition|default(false) %}
 <div class="locale-selector">
     <a href="{{ path('admin_about', {locale: 'fr'}) }}">Français</a> | 

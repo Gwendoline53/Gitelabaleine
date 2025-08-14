@@ -16,28 +16,15 @@ class TemoignageRepository extends ServiceEntityRepository
         parent::__construct($registry, Temoignage::class);
     }
 
-    //    /**
-    //     * @return Temoignage[] Returns an array of Temoignage objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // src/Repository/TemoignageRepository.php
 
-    //    public function findOneBySomeField($value): ?Temoignage
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findApprovedTemoignages()
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.isApproved = :approved')
+            ->setParameter('approved', true)
+            ->orderBy('t.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

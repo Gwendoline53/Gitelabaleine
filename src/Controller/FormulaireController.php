@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Message;
-use App\Form\MessageType;
+use App\Form\FormulaireType; // <-- ici on importe le bon formulaire
 use App\Service\StatisticsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +22,8 @@ final class FormulaireController extends AbstractController
         $stats->recordVisit('app_contact');
 
         $message = new Message();
-        $form = $this->createForm(MessageType::class, $message);
+        // Ici on crée le formulaire avec FormulaireType et non MessageType
+        $form = $this->createForm(FormulaireType::class, $message);
 
         $form->handleRequest($request);
 

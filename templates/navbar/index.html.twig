@@ -6,11 +6,11 @@
 <header class="navbar">
     <div class="navbar-container">
         <nav class="navbar-links">
-            <a href="{{ path('app_home') }}">Accueil</a>
-            <a href="{{ path('app_about') }}">À propos</a>
-            <a href="{{ path('app_contact') }}">Contact</a>
-            <a href="{{ path('app_mention') }}">Mention legales</a>
-            <a href="{{ path('app_chambres') }}">Chambres</a>
+            <a href="{{ path('app_home') }}">{{ contenus.accueil|default('Accueil')}}</a>
+            <a href="{{ path('app_about') }}">{{ contenus.apropos|default('À propos')}}</a>
+            <a href="{{ path('app_contact') }}">{{ contenus.contacts|default('Contacts')}}</a>
+            <a href="{{ path('app_mention') }}">{{ contenus.mentionslégales|default('Mentions légales')}}</a>
+            <a href="{{ path('app_chambres') }}">{{ contenus.chambres|default('Chambres')}}</a>
         </nav>
     </div>
     <div class="language-select">

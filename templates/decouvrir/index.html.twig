@@ -3,7 +3,7 @@
 {% block title %}Découvrir{% endblock %}
 
 {% block body %}
-{% include 'navbar/index.html.twig' %}
+{{ render(path('app_navbar')) }}
 
 {% if mode_edition|default(false) %}
 <div class="locale-selector">
@@ -36,12 +36,12 @@
                 </p>
 
                 <div class="liste-atouts">
-                    <h2 class="titre-liste">🍃 Ce que vous trouverez ici :</h2>
+                    <h2 class="titre-liste">{{ contenus.p6|default("🍃 Ce que vous trouverez ici :")|raw }}</h2>
                     <ul {% if mode_edition|default(false) %}contenteditable="true" data-cle="p4"{% endif %}>
-                        <li>Une maison chaleureuse, mêlant confort moderne et charme rustique</li>
-                        <li>Une forêt à votre porte, idéale pour randonner, lire ou ne rien faire</li>
-                        <li>La mer à quelques minutes, avec ses plages paisibles et ses falaises</li>
-                        <li>Le calme absolu d’un village discret, à l’écart des foules</li>
+                        <li>{{ contenus.p7|default("Une maison chaleureuse, mêlant confort moderne et charme rustique")|raw }}</li>
+                        <li>{{ contenus.p8|default("Une forêt à votre porte, idéale pour randonner, lire ou ne rien faire")|raw }}</li>
+                        <li>{{ contenus.p9|default("La mer à quelques minutes, avec ses plages paisibles et ses falaises")|raw }}</li>
+                        <li>{{ contenus.p10|default("Le calme absolu d’un village discret, à l’écart des foules")|raw }}</li>
                     </ul>
                 </div>
             </div>
