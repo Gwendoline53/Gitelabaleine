@@ -1,12 +1,97 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Chambres{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
-{{ render(path('app_navbar')) }}
-<div class="chambres-container">
-    <h1>Liste des Chambres</h1>
+    {{ render(path('app_navbar')) }}
 
+    {% if mode_edition|default(false) %}
+        <div class="locale-selector">
+            <a href="{{ path('admin_home', {locale: 'fr'}) }}">Français</a> |
+            <a href="{{ path('admin_home', {locale: 'en'}) }}">English</a>
+        </div>
+    {% endif %}
+<div class="lierre1"></div>
+<div class="lierre2"></div>
+    <div class="page-chambres">
+        <div class="chambres-texte">
+            <h1 class="titrechambres"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titrep|default('Nos chambres :')|raw }}
+            </h1>
+        </div>
+        <div class="baton1"></div>
 
-{% include 'footer/index.html.twig' %}
+        <button class="titrechambremer" onclick="window.location.href='{{ path('app_chambremer') }}'">{{ contenus.titrechambremer|default('Chambre de la mer')}}</button>
+        <div class="chambremer"></div>
+        <div class="ecriturefondchambre1"></div>
+        <div class="baleine"></div>
+            <div class="textechambremer">
+                <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textechambremer" {% endif %}>
+                    {{ contenus.textechambremer|default("Plongez dans une ambiance douce et apaisante dès votre arrivée. Cette chambre chaleureuse, baignée de lumière naturelle, vous invite à la détente dans un décor inspiré de la mer. Entre les tons sable et les touches boisées, chaque détail évoque les vacances, le calme et l’évasion.")|raw }}
+                </p>
+            </div>
+        <div class="batont"></div>
+        <button class="titrechambrenature" onclick="window.location.href='{{ path('app_chambrenature') }}'">{{ contenus.titrechambrenature|default('Chambre de la nature')}}</button>
+        <div class="chambrenature"></div>
+        <div class="ecriturefondchambre2"></div>
+        <div class="textechambrenature">
+        <div class="potfleure"></div>
+            <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textechambrenature" {% endif %}>
+                {{ contenus.textechambrenature|default("Plongez au cœur de la nature dès les premiers instants. Cette chambre, enveloppée de teintes douces et végétales, vous offre une parenthèse paisible loin du tumulte. La lumière filtre à travers les feuillages, dessinant des jeux d’ombre apaisants sur les matières brutes et naturelles. Bois, lin, et nuances de vert composent un décor authentique, propice au repos et à la reconnexion. Ici, chaque détail invite à respirer, ralentir, et savourer la sérénité de l’instant.")|raw }}
+            </p>
+        </div>
+        <div class="batont1"></div>
+        <button class="titrechambreretro" onclick="window.location.href='{{ path('app_chambrenature') }}'">{{ contenus.titrechambreretro|default('Chambre retro')}}</button>
+        <div class="chambreretro"></div>
+         <div class="ecriturefondchambre3"></div>
+        <div class="textechambreretro">
+        <div class="statue"></div>
+            <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textechambreretro" {% endif %}>
+                {{ contenus.textechambreretro|default("Laissez-vous envelopper par le charme délicat d’une époque révolue. Cette chambre au style rétro mêle douceur et authenticité, dans une atmosphère paisible et intemporelle. Entre les drapés légers, les meubles en bois patiné et les objets choisis avec soin, chaque détail raconte une histoire. La lumière naturelle caresse les tons crème et pastel, invitant à la rêverie et à la lenteur. Un cocon hors du temps, parfait pour se ressourcer dans une ambiance élégante et nostalgique.")|raw }}
+            </p>
+        </div>
+        <div class="batont3"></div>
+    </div>
+
+    {% if mode_edition|default(false) %}
+        <div class="btn-containervaliderhome">
+            <button id="btn-validerhome">Valider les modifications</button>
+        </div>
+
+        <script>
+            document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                el.addEventListener('blur', () => {
+                    const cle = el.dataset.cle;
+                    const texte = el.innerText.trim();
+                    const locale = '{{ app.request.locale }}';
+
+                    fetch('{{ path("admin_home_update") }}', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            alert('Erreur lors de la sauvegarde');
+                        }
+                    });
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% include 'footer/index.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script>
+        // LANGUE
+        function changeLanguage(selectElement) {
+            const selectedLocale = selectElement.value;
+            window.location.href = '/change-locale/' + selectedLocale;
+        }
+    </script>
 {% endblock %}

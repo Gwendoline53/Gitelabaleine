@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    {{ render(path('app_navbar')) }}
+
+    {% if mode_edition|default(false) %}
+        <div class="locale-selector">
+            <a href="{{ path('admin_home', {locale: 'fr'}) }}">Français</a> |
+            <a href="{{ path('admin_home', {locale: 'en'}) }}">English</a>
+        </div>
+    {% endif %}
+
+    {% include 'footer/index.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script>
+        // LANGUE
+        function changeLanguage(selectElement) {
+            const selectedLocale = selectElement.value;
+            window.location.href = '/change-locale/' + selectedLocale;
+        }
+    </script>
+{% endblock %}

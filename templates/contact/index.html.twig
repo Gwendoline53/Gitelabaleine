@@ -19,6 +19,15 @@
         data-cle="titre">
         {{ contact.titre|default('Contacts') }}
     </h1>
+    <div class="decorative-imagecontacttitre" alt="Décoration-titre"></div>
+</div>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
     </div>
 
 
