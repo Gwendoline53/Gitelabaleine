@@ -44,10 +44,9 @@ class FormulaireType extends AbstractType
             ->add('chambre', ChoiceType::class, [
                 'label' => 'Choisissez votre chambre',
                 'choices' => [
-                    'Chambre Bleue' => 'chambre_bleue',
-                    'Suite Jardin' => 'suite_jardin',
-                    'Chambre Vue Mer' => 'vue_mer',
-                    'Chambre Parentale' => 'parentale',
+                    'Chambre de la baleine' => 'Chambre de la baleine',
+                    'Chambre de la nature' => 'Chambre de la nature',
+                    'Chambre Retro' => 'Chambre Retro',
                 ],
                 'placeholder' => 'Sélectionnez une chambre',
                 'required' => false,     // optionnel, car visible uniquement si sujet = reservation

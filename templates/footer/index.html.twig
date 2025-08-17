@@ -1,4 +1,10 @@
-<footer class="custom-footer">
+{% extends 'base.html.twig' %}
+
+{% block title %}Navbar{% endblock %}
+
+{% block body %}
+    <footer class="custom-footer">
 <div class="footer-bottom">
 	<p>{{ contenus.footerdroitsreserves|default('© 2025 Le gite Le bourg de la Baleine. Tous droits réservés.')}}</p>
 </div></footer>
+{% endblock %}

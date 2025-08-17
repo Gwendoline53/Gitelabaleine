@@ -22,7 +22,10 @@
         </div>
         <div class="baton1"></div>
 
-        <button class="titrechambremer" onclick="window.location.href='{{ path('app_chambremer') }}'">{{ contenus.titrechambremer|default('Chambre de la mer')}}</button>
+        <h1 class="titrechambremer"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titrechambremer|default('Chambre de la baleine')|raw }}
+            </h1>
         <div class="chambremer"></div>
         <div class="ecriturefondchambre1"></div>
         <div class="baleine"></div>
@@ -32,8 +35,10 @@
                 </p>
             </div>
         <div class="batont"></div>
-        <button class="titrechambrenature" onclick="window.location.href='{{ path('app_chambrenature') }}'">{{ contenus.titrechambrenature|default('Chambre de la nature')}}</button>
-        <div class="chambrenature"></div>
+            <h1 class="titrechambrenature"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titrechambrenature|default('Chambre de la nature')|raw }}
+            </h1>        <div class="chambrenature"></div>
         <div class="ecriturefondchambre2"></div>
         <div class="textechambrenature">
         <div class="potfleure"></div>
@@ -42,8 +47,10 @@
             </p>
         </div>
         <div class="batont1"></div>
-        <button class="titrechambreretro" onclick="window.location.href='{{ path('app_chambrenature') }}'">{{ contenus.titrechambreretro|default('Chambre retro')}}</button>
-        <div class="chambreretro"></div>
+            <h1 class="titrechambreretro"
+                {% if mode_edition|default(false) %}contenteditable="true" data-cle="titre"{% endif %}>
+                {{ contenus.titrechambreretro|default('Chambre retro')|raw }}
+            </h1>        <div class="chambreretro"></div>
          <div class="ecriturefondchambre3"></div>
         <div class="textechambreretro">
         <div class="statue"></div>
