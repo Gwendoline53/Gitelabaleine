@@ -49,8 +49,7 @@ class FormulaireType extends AbstractType
                     'Chambre Retro' => 'Chambre Retro',
                 ],
                 'placeholder' => 'Sélectionnez une chambre',
-                'required' => false,     // optionnel, car visible uniquement si sujet = reservation
-                'mapped' => false,       // si tu ne veux pas lier à l'entité Message (à adapter selon usage)
+                'required' => false,
                 'attr' => ['class' => 'styled-select'],
             ])
             ->add('body', TextareaType::class, [

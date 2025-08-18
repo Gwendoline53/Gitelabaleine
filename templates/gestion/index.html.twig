@@ -8,7 +8,6 @@
 	<div class="gestion-container">
 		<div class="pricing-header">
 			<h1>Gestion du site</h1>
-			<img src="{{ asset('assets/images/gestion/flower.png') }}" class="header-image" alt="Fleur droite">
 		</div>
 
 		<div class="button-grid">
@@ -16,11 +15,16 @@
 			{% if is_granted('ROLE_ADMIN') %}
 				<a href="{{ path('admin_home') }}" class="menu-button">Acceuil</a>
 				<a href="{{ path('admin_about') }}" class="menu-button">A propos</a>
+				<a href="{{ path('admin_decouvrir') }}" class="menu-button">Decouvrir</a>
+				<a href="{{ path('admin_chambres') }}" class="menu-button">Chambres</a>
 			</div>
 			<div class="button-column">
 				
 				<a href="{{ path('admin_temoignages') }}" class="menu-button">Avis</a>
 				<a href="{{ path('admin_contact') }}" class="menu-button">Contact</a>
+				<a href="{{ path('admin_mention') }}" class="menu-button">Mention</a>
+				<a href="{{ path('admin_formulaire') }}" class="menu-button">Formulaire</a>
+
 				<button class="btn-modifmdp button-grid " onclick="window.location.href='/admin/modifier-mot-de-passe'">Modifier Mot de passe</button>
 			{% endif %}
 			</div>

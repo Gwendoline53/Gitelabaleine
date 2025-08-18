@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\About;
-use App\Repository\AboutRepository;
+use App\Entity\Mention;
+use App\Repository\MentionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,35 +12,35 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-final class AboutAdminController extends AbstractController
+final class MentionAdminController extends AbstractController
 {
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('admin/about', name: 'admin_about')]
+    #[Route('admin/mention', name: 'admin_mention')]
     public function index(
-        AboutRepository $aboutRepository,
+        MentionRepository $mentionRepository,
         Request $request,
     ): Response {
         $locale = $request->query->get('locale', 'fr');
 
-        $blocs = $aboutRepository->findBy(['locale' => $locale]);
+        $blocs = $mentionRepository->findBy(['locale' => $locale]);
         if (!$blocs) {
-            $blocs = $aboutRepository->findBy(['locale' => 'fr']);
+            $blocs = $mentionRepository->findBy(['locale' => 'fr']);
         }
 
         $contenus = [];
         foreach ($blocs as $bloc) {
-            $contenus[$bloc->getKey()] = $bloc->getContenu();
+            $contenus[$bloc->getcle()] = $bloc->getContenu();
         }
 
-        return $this->render('about/index.html.twig', [ // ✅ chemin du template modifié
+        return $this->render('mention/index.html.twig', [
             'contenus' => $contenus,
             'locale' => $locale,
             'mode_edition' => true,
         ]);
     }
 
-    #[Route('/admin/about/update', name: 'admin_about_update', methods: ['POST'])]
-    public function update(Request $request, AboutRepository $aboutRepository, EntityManagerInterface $em): JsonResponse
+    #[Route('/admin/mention/update', name: 'admin_mention_update', methods: ['POST'])]
+    public function update(Request $request, MentionRepository $mentionRepository, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -52,9 +52,9 @@ final class AboutAdminController extends AbstractController
         $texte = $data['texte'];
         $locale = $data['locale'];
 
-        $bloc = $aboutRepository->findOneBy(['key' => $key, 'locale' => $locale]);
+        $bloc = $mentionRepository->findOneBy(['key' => $key, 'locale' => $locale]);
         if (!$bloc) {
-            $bloc = new About();
+            $bloc = new Mention();
             $bloc->setcle($key);
             $bloc->setLocale($locale);
             $em->persist($bloc);

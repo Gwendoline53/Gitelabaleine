@@ -24,7 +24,9 @@
       <link rel="stylesheet" href="{{ asset('assets/css/chambres.css') }}?v={{ "now"|date("U") }}">
       <link rel="stylesheet" href="{{ asset('assets/css/decouvrir.css') }}?v={{ "now"|date("U") }}">
       <link rel="stylesheet" href="{{ asset('assets/css/chambremer.css') }}?v={{ "now"|date("U") }}">
-
+      <link rel="stylesheet" href="{{ asset('assets/css/resetpassword.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/check.css') }}?v={{ "now"|date("U") }}">
+      <link rel="stylesheet" href="{{ asset('assets/css/Account.css') }}?v={{ "now"|date("U") }}">
 
 
       <link href="https://fonts.googleapis.com/css2?family=Mea+Culpa&display=swap" rel="stylesheet">
@@ -33,7 +35,7 @@
       <link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&display=swap" rel="stylesheet">
     {% endblock %}
   </head>
-  <body>
+  <body class="{{ app.request.locale }}">
     {% block body %}{% endblock %}
 
 {% block javascripts %}

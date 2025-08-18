@@ -40,6 +40,19 @@ class Message
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $category = null; // ✅ Nouveau champ
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $chambre = null;
+
+    public function getChambre(): ?string
+    {
+        return $this->chambre;
+    }
+
+    public function setChambre(?string $chambre): self
+    {
+        $this->chambre = $chambre;
+        return $this;
+    }
     // --- Getters et Setters ---
 
     public function getId(): ?int { return $this->id; }

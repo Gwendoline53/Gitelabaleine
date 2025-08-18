@@ -6,15 +6,15 @@ use App\Entity\Contact;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[IsGranted('ROLE_ADMIN')]
-class ContactAdminController extends AbstractController
+final class ContactAdminController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/contact', name: 'admin_contact')]
     public function index(ContactRepository $contactRepository, Request $request): Response
     {
@@ -22,13 +22,10 @@ class ContactAdminController extends AbstractController
 
         $contact = $contactRepository->findOneBy(['locale' => $locale]);
 
+        // Si aucun contact n'existe pour la locale, en créer un vide
         if (!$contact) {
             $contact = new Contact();
             $contact->setLocale($locale);
-            $contact->setEmail('');
-            $contact->setTelephone('');
-            $contact->setAdresse('');
-            $contact->setTitre('Contacts'); // Valeur par défaut
         }
 
         return $this->render('contact/index.html.twig', [
@@ -43,14 +40,14 @@ class ContactAdminController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (!isset($data['cle'], $data['texte'], $data['locale'])) {
-            return new JsonResponse(['success' => false, 'message' => 'Données invalides'], 400);
+        $requiredFields = ['titre', 'adresse', 'telephone', 'email', 'locale'];
+        foreach ($requiredFields as $field) {
+            if (!isset($data[$field])) {
+                return new JsonResponse(['success' => false, 'message' => "Champ manquant : $field"], 400);
+            }
         }
 
-        $cle = $data['cle'];
-        $texte = $data['texte'];
         $locale = $data['locale'];
-
         $contact = $contactRepository->findOneBy(['locale' => $locale]);
 
         if (!$contact) {
@@ -59,22 +56,10 @@ class ContactAdminController extends AbstractController
             $em->persist($contact);
         }
 
-        switch ($cle) {
-            case 'titre':
-                $contact->setTitre($texte);
-                break;
-            case 'email':
-                $contact->setEmail($texte);
-                break;
-            case 'telephone':
-                $contact->setTelephone($texte);
-                break;
-            case 'adresse':
-                $contact->setAdresse($texte);
-                break;
-            default:
-                return new JsonResponse(['success' => false, 'message' => 'Clé invalide'], 400);
-        }
+        $contact->setTitre($data['titre']);
+        $contact->setAdresse($data['adresse']);
+        $contact->setTelephone($data['telephone']);
+        $contact->setEmail($data['email']);
 
         try {
             $em->flush();

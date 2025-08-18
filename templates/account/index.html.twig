@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mot de passe
+{% endblock %}
+
+{% block body %}
+{% include 'navbaradmin/index.html.twig' %}
+<div class="containeraccount">
+    <div class="modif-password-wrapper">
+        <h1 class="modiftitre">Modifier votre mot de passe</h1>
+
+        <div class="formaccount">
+            {{ form_start(form) }}
+                {{ form_row(form.oldPassword) }}
+                {{ form_row(form.newPassword) }}
+                {{ form_row(form.confirmPassword) }}
+
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                    <a href="{{ path('admin_gestion') }}" class="btn btn-primary1">Annuler</a>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endfor %}
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success">{{ message }}</div>
+{% endfor %}
+
+{% endblock %}

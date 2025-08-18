@@ -3,14 +3,13 @@
 {% block title %}Contacts{% endblock %}
 
 {% block body %}
-{{ render(path('app_navbar')) }}
-
 {% if mode_edition|default(false) %}
 <div class="locale-selectorcontact">
-  <a href="{{ path('admin_contact', {locale: 'fr'}) }}">Français</a> | 
-  <a href="{{ path('admin_contact', {locale: 'en'}) }}">English</a>
+    <a href="{{ path('admin_contact', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_contact', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
 </div>
 {% endif %}
+{{ render(path('app_navbar')) }}
 <div class="contact-section">
     <div class="contact-container">
     <h1 class="contact-title elegant-underline"

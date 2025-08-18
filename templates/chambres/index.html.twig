@@ -1,16 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}Chambres{% endblock %}
 
 {% block body %}
-    {{ render(path('app_navbar')) }}
-
-    {% if mode_edition|default(false) %}
-        <div class="locale-selector">
-            <a href="{{ path('admin_home', {locale: 'fr'}) }}">Français</a> |
-            <a href="{{ path('admin_home', {locale: 'en'}) }}">English</a>
-        </div>
-    {% endif %}
+{% if mode_edition|default(false) %}
+<div class="chambreslocale-selector">
+    <a href="{{ path('admin_chambres', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_chambres', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+</div>
+{% endif %}
+{{ render(path('app_navbar')) }}
 <div class="lierre1"></div>
 <div class="lierre2"></div>
     <div class="page-chambres">
@@ -62,8 +61,8 @@
     </div>
 
     {% if mode_edition|default(false) %}
-        <div class="btn-containervaliderhome">
-            <button id="btn-validerhome">Valider les modifications</button>
+        <div class="btn-containervaliderchambres">
+            <button id="btn-validerchambres">Valider les modifications</button>
         </div>
 
         <script>
@@ -73,19 +72,23 @@
                     const texte = el.innerText.trim();
                     const locale = '{{ app.request.locale }}';
 
-                    fetch('{{ path("admin_home_update") }}', {
+                    fetch('{{ path("admin_update_contenu") }}', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
                     })
-                    .then(response => response.json())
+                    then(response => response.json())
                     .then(data => {
                         if (!data.success) {
-                            alert('Erreur lors de la sauvegarde');
-                        }
-                    });
-                });
+                            alert("Erreur lors de la sauvegarde");
+                }
             });
+        });
+    });
+
+    document.getElementById('btn-validerchambres').addEventListener('click', () => {
+        window.location.href = '{{ path("admin_gestion") }}';
+    });
         </script>
     {% endif %}
 

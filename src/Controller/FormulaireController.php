@@ -3,44 +3,58 @@
 namespace App\Controller;
 
 use App\Entity\Message;
-use App\Form\FormulaireType; // <-- ici on importe le bon formulaire
 use App\Service\StatisticsService;
+use App\Repository\FormulaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\FormulaireType;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 final class FormulaireController extends AbstractController
 {
     #[Route('/formulaire', name: 'app_formulaire')]
     public function index(
         Request $request,
-        StatisticsService $stats,
-        EntityManagerInterface $entityManager
+    StatisticsService $stats,
+    EntityManagerInterface $entityManager,
+    FormulaireRepository $formulaireRepository
     ): Response {
-        $stats->recordVisit('app_contact');
+       $stats->recordVisit('app_contact');
 
-        $message = new Message();
-        // Ici on crée le formulaire avec FormulaireType et non MessageType
-        $form = $this->createForm(FormulaireType::class, $message);
+    // Récupération locale
+    $locale = $request->getLocale();
 
-        $form->handleRequest($request);
+    // Contenus dynamiques depuis la base
+    $blocs = $formulaireRepository->findBy(['locale' => $locale]);
+    $contenus = [];
+    foreach ($blocs as $bloc) {
+        $contenus[$bloc->getCle()] = $bloc->getContenu();
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $message->setReceivedAt(new \DateTimeImmutable());
-            $message->setIsRead(false);
+    $message = new Message();
+    $form = $this->createForm(FormulaireType::class, $message);
+    $form->handleRequest($request);
 
-            $entityManager->persist($message);
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $message->setReceivedAt(new \DateTimeImmutable());
+        $message->setIsRead(false);
 
-            $this->addFlash('success', 'Votre message a bien été envoyé.');
+        $entityManager->persist($message);
+        $entityManager->flush();
 
-            return $this->redirectToRoute('app_formulaire');
-        }
+        $this->addFlash('success', 'Votre message a bien été envoyé.');
 
-        return $this->render('formulaire/index.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->redirectToRoute('app_formulaire', ['_locale' => $locale]);
+    }
+
+    return $this->render('formulaire/index.html.twig', [
+        'form' => $form->createView(),
+        'contenus' => $contenus,
+        'locale' => $locale,
+        'mode_edition' => false,
+    ]);
     }
 }

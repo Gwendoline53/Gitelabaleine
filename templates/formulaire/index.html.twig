@@ -1,17 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nous contacter{% endblock %}
+{% block title %}{{ contenus.meta_titre|default('Nous contacter') }}{% endblock %}
 
 {% block body %}
-{{ render(path('app_navbar')) }}
+{% include 'navbar/index.html.twig' %}
 {% if mode_edition|default(false) %}
-<div class="locale-selector">
-    <a href="{{ path('app_formulaire', {locale: 'fr'}) }}">Français</a> | 
-    <a href="{{ path('app_formulaire', {locale: 'en'}) }}">English</a>
+<div class="formulairelocale-selector">
+    <a href="{{ path('admin_formulaire', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_formulaire', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
 </div>
 {% endif %}
-{% include 'navbar/index.html.twig' %}
-
 <div class="v1">
 
     <div class="image-containerformulairegauche">
@@ -23,10 +21,15 @@
     <div class="image-containerformulairedroite2">
         <div class="decorative-imageformulairedroite2" alt="Décoration-droite"></div>
     </div>
-     <div class="image-containerformulaire3">
+    <div class="image-containerformulaire3">
         <div class="decorative-imageformulaire3" alt="Décoration-droite"></div>
     </div>
-    <h1 class="titreformulaireformulaire">Nous Contacter</h1>
+
+    <h1 class="titreformulaireformulaire"
+        {% if mode_edition %}contenteditable="true" data-cle="titre"{% endif %}>
+        {{ contenus.titre|default('Nous Contacter')|raw }}
+    </h1>
+
     <div class="containerformulaire">
 
         {% for label, messages in app.flashes %}
@@ -43,7 +46,10 @@
             <div class="icon">✉️</div>
             <div class="nousformulairedark-light">
                 {{ form_widget(form.fromEmail, {
-                    'attr': {'placeholder': 'Entrer votre adresse mail...', 'required': true}
+                    'attr': {
+                        'placeholder': contenus.placeholder_email|default('Entrez votre adresse mail...'),
+                        'required': true
+                    }
                 }) }}
                 {{ form_errors(form.fromEmail) }}
             </div>
@@ -52,7 +58,10 @@
         <div class="input-group">
             <div class="icon">📞</div>
             {{ form_widget(form.phoneNumber, {
-                'attr': {'placeholder': 'Entrer votre numéro de téléphone...', 'required': false}
+                'attr': {
+                    'placeholder': contenus.placeholder_telephone|default('Entrez votre numéro de téléphone...'),
+                    'required': false
+                }
             }) }}
             {{ form_errors(form.phoneNumber) }}
         </div>
@@ -71,7 +80,7 @@
         <div class="textarea-group">
             {{ form_widget(form.body, {
                 'attr': {
-                    'placeholder': 'Entrez votre demande...',
+                    'placeholder': contenus.placeholder_message|default('Entrez votre message ici...'),
                     'rows': 8,
                     'required': true,
                 }
@@ -79,32 +88,68 @@
             {{ form_errors(form.body) }}
         </div>
 
-        <button class="formulairebutton" type="submit">Envoyez</button>
+        <button class="formulairebutton" type="submit">
+            {{ contenus.bouton|default('Envoyer')|raw }}
+        </button>
 
         {{ form_end(form) }}
 
     </div>
 </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+            const subjectSelect = document.querySelector('select[name="{{ form.subject.vars.full_name }}"]');
+            const chambreGroup = document.getElementById('chambre-group');
 
-{% include 'footer/index.html.twig' %}
+            if (!subjectSelect || !chambreGroup) {
+                console.warn("Champ 'subject' ou 'chambre-group' introuvable.");
+                return;
+            }
+
+            function toggleChambre() {
+                console.log("Valeur sélectionnée :", subjectSelect.value);
+                if (subjectSelect.value === 'reservation') {
+                    chambreGroup.style.display = 'block';
+                } else {
+                    chambreGroup.style.display = 'none';
+                }
+            }
+
+            subjectSelect.addEventListener('change', toggleChambre);
+            toggleChambre();
+        });
+    </script>
+{% if mode_edition|default(false) %}
+<div class="btn-containervaliderformulaire">
+    <button id="btn-validerformulaire">Valider les modifications</button>
+</div>
 
 <script>
-    // JS pour afficher / cacher le champ chambre selon le sujet sélectionné
-    document.addEventListener('DOMContentLoaded', function () {
-        const subjectSelect = document.querySelector('select[name="{{ form.subject.vars.full_name }}"]');
-        const chambreGroup = document.getElementById('chambre-group');
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        el.addEventListener('blur', () => {
+            const cle = el.dataset.cle;
+            const texte = el.innerHTML.trim();
+            const locale = '{{ locale|default("fr") }}';
 
-        function toggleChambre() {
-            if(subjectSelect.value === 'reservation') {
-                chambreGroup.style.display = 'block';
-            } else {
-                chambreGroup.style.display = 'none';
-            }
-        }
+            fetch('{{ path("admin_update_contenu") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Erreur lors de la sauvegarde");
+                }
+            });
+        });
+    });
 
-        subjectSelect.addEventListener('change', toggleChambre);
-        toggleChambre(); // appel au chargement pour afficher ou cacher suivant valeur par défaut
+    document.getElementById('btn-validerformulaire').addEventListener('click', () => {
+        window.location.href = '{{ path("admin_gestion") }}';
     });
 </script>
+{% endif %}
 
+{% include 'footer/index.html.twig' %}
 {% endblock %}

@@ -4,9 +4,9 @@
 
 {% block body %}
 {% if mode_edition|default(false) %}
-<div class="locale-selector">
-    <a href="{{ path('admin_mention', {locale: 'fr'}) }}">Français</a> | 
-    <a href="{{ path('admin_mention', {locale: 'En'}) }}">English</a>
+<div class="mentionlocale-selector">
+    <a href="{{ path('admin_mention', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+    <a href="{{ path('admin_mention', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
 </div>
 {% endif %}
 {{ render(path('app_navbar')) }}
@@ -106,4 +106,35 @@
     </div>
 
 </div>
+{% if mode_edition|default(false) %}
+<div class="btn-containervalidermention">
+    <button id="btn-validermention">Valider les modifications</button>
+</div>
+
+<script>
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        el.addEventListener('blur', () => {
+            const cle = el.dataset.cle;
+            const texte = el.innerHTML.trim();
+            const locale = '{{ locale|default("fr") }}';
+
+            fetch('{{ path("admin_update_contenu") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert("Erreur lors de la sauvegarde");
+                }
+            });
+        });
+    });
+
+    document.getElementById('btn-validermention').addEventListener('click', () => {
+        window.location.href = '{{ path("admin_gestion") }}';
+    });
+</script>
+{% endif %}
 {% endblock %}

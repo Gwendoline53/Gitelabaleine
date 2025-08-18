@@ -3,31 +3,33 @@
 namespace App\Controller;
 
 use App\Repository\ContactRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
-    public function index(ContactRepository $contactRepository, RequestStack $requestStack): Response
-    {
-        // Récupère la locale courante (ex: 'fr', 'en')
+    public function index(
+        ContactRepository $contactRepository,
+        RequestStack $requestStack
+    ): Response {
+        // 🌍 Récupère la locale actuelle
         $locale = $requestStack->getCurrentRequest()->getLocale();
 
-        // Recherche les coordonnées pour cette locale
-        $contact = $contactRepository->findOneBy(['locale' => $locale]);
+        // 📦 Récupère les contacts traduits
+        $contacts = $contactRepository->findBy(['locale' => $locale]);
 
-        // Si pas trouvé, fallback sur 'fr'
-        if (!$contact) {
-            $contact = $contactRepository->findOneBy(['locale' => 'fr']);
+        // 🔄 Fallback français si vide
+        if (!$contacts) {
+            $contacts = $contactRepository->findBy(['locale' => 'fr']);
         }
 
         return $this->render('contact/index.html.twig', [
-             'contact' => $contact,
-            'mode_edition' => false,
+            'contacts' => $contacts,
             'locale' => $locale,
+            'mode_edition' => false,
         ]);
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\About;
-use App\Repository\AboutRepository;
+use App\Entity\Decouvrir;
+use App\Repository\DecouvrirRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,19 +12,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-final class AboutAdminController extends AbstractController
+final class DecouvrirAdminController extends AbstractController
 {
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('admin/about', name: 'admin_about')]
+    #[Route('admin/decouvrir', name: 'admin_decouvrir')]
     public function index(
-        AboutRepository $aboutRepository,
+        DecouvrirRepository $decouvrirRepository,
         Request $request,
     ): Response {
         $locale = $request->query->get('locale', 'fr');
 
-        $blocs = $aboutRepository->findBy(['locale' => $locale]);
+        $blocs = $decouvrirRepository->findBy(['locale' => $locale]);
         if (!$blocs) {
-            $blocs = $aboutRepository->findBy(['locale' => 'fr']);
+            $blocs = $decouvrirRepository->findBy(['locale' => 'fr']);
         }
 
         $contenus = [];
@@ -32,15 +32,15 @@ final class AboutAdminController extends AbstractController
             $contenus[$bloc->getKey()] = $bloc->getContenu();
         }
 
-        return $this->render('about/index.html.twig', [ // ✅ chemin du template modifié
+        return $this->render('decouvrir/index.html.twig', [
             'contenus' => $contenus,
             'locale' => $locale,
             'mode_edition' => true,
         ]);
     }
 
-    #[Route('/admin/about/update', name: 'admin_about_update', methods: ['POST'])]
-    public function update(Request $request, AboutRepository $aboutRepository, EntityManagerInterface $em): JsonResponse
+    #[Route('/admin/decouvrir/update', name: 'admin_decouvrir_update', methods: ['POST'])]
+    public function update(Request $request, DecouvrirRepository $decouvrirRepository, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -52,10 +52,10 @@ final class AboutAdminController extends AbstractController
         $texte = $data['texte'];
         $locale = $data['locale'];
 
-        $bloc = $aboutRepository->findOneBy(['key' => $key, 'locale' => $locale]);
+        $bloc = $decouvrirRepository->findOneBy(['key' => $key, 'locale' => $locale]);
         if (!$bloc) {
-            $bloc = new About();
-            $bloc->setcle($key);
+            $bloc = new Decouvrir();
+            $bloc->setKey($key);
             $bloc->setLocale($locale);
             $em->persist($bloc);
         }

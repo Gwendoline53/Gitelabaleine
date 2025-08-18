@@ -55,10 +55,13 @@
                  data-from="{{ message.fromEmail|e('html_attr') }}"
                  data-date="{{ message.receivedAt|date('d/m/Y H:i') }}"
                  data-body="{{ message.body|e('html_attr') }}">
-              <p><strong>De :</strong> {{ message.fromEmail }}</p>
-              <p><strong>Sujet :</strong> {{ message.subject }}</p>
-              <p><strong>Message :</strong> {{ message.body|u.truncate(100, '...') }}</p>
-              <p><strong>Reçu le :</strong> {{ message.receivedAt|date('d/m/Y H:i') }}</p>
+                <p><strong>De :</strong> {{ message.fromEmail }}</p>
+                <p><strong>Sujet :</strong> {{ message.subject }}</p>
+                {% if message.subject == 'reservation' and message.chambre %}
+                  <p><strong>Chambre :</strong> {{ message.chambre }}</p>
+                {% endif %}
+                <p><strong>Message :</strong> {{ message.body|u.truncate(100, '...') }}</p>
+                <p><strong>Reçu le :</strong> {{ message.receivedAt|date('d/m/Y H:i') }}</p>
 
               <form method="post" action="{{ path('admin_messageriearchive', { id: message.id }) }}">
                 <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ message.id) }}">

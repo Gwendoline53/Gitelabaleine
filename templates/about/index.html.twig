@@ -5,7 +5,7 @@
 {% block body %}
 {{ render(path('app_navbar')) }}
 {% if mode_edition|default(false) %}
-<div class="locale-selector">
+<div class="Aboutlocale-selector">
     <a href="{{ path('admin_about', {locale: 'fr'}) }}">Français</a> | 
     <a href="{{ path('admin_about', {locale: 'En'}) }}">English</a>
 </div>

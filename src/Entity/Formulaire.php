@@ -1,40 +1,43 @@
 <?php
 
+// src/Entity/Formulaire.php
+
 namespace App\Entity;
 
+use App\Repository\FormulaireRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\DecouvrirRepository;
 
-#[ORM\Entity(repositoryClass: DecouvrirRepository::class)]
-class Decouvrir
-{#[ORM\Id]
+#[ORM\Entity(repositoryClass: FormulaireRepository::class)]
+class Formulaire
+{
+    #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $contenu = null;
-
     #[ORM\Column(length: 255)]
+    private ?string $cle = null;
+
+    #[ORM\Column(length: 5)]
     private ?string $locale = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $key = null;
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $contenu = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getContenu(): ?string
+    public function getCle(): ?string
     {
-        return $this->contenu;
+        return $this->cle;
     }
 
-    public function setContenu(string $contenu): static
+    public function setCle(string $cle): static
     {
-        $this->contenu = $contenu;
+        $this->cle = $cle;
         return $this;
     }
 
@@ -49,15 +52,15 @@ class Decouvrir
         return $this;
     }
 
-
-    public function getKey(): ?string
+    public function getContenu(): ?string
     {
-        return $this->key;
+        return $this->contenu;
     }
 
-    public function setKey(string $key): static
+    public function setContenu(string $contenu): static
     {
-        $this->key = $key;
+        $this->contenu = $contenu;
         return $this;
     }
 }
+
