@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller\Admin;
 
 use App\Entity\Home;
@@ -16,17 +15,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[IsGranted('ROLE_ADMIN')]
 class HomeAdminController extends AbstractController
 {
-    #[Route('/admin/home', name: 'admin_home')]
+    private string $locale;
+#[Route('/admin/home', name: 'admin_home')]
 public function index(
     HomeRepository $homeRepository,
     Request $request,
-    TemoignageRepository $temoignageRepository // ✅ Ajout ici
+    TemoignageRepository $temoignageRepository,
 ): Response {
     $locale = $request->query->get('locale', 'fr');
-
     $blocs = $homeRepository->findBy(['locale' => $locale]);
+
     if (!$blocs) {
-        $blocs = $homeRepository->findBy(['locale' => 'fr']);
+        $blocs = [];
     }
 
     $contenus = [];
@@ -34,19 +34,19 @@ public function index(
         $contenus[$bloc->getKey()] = $bloc->getContenu();
     }
 
-    // ✅ Récupération des témoignages approuvés
     $temoignages = $temoignageRepository->findBy([
         'isApproved' => true,
         'locale' => $locale,
     ], ['createdAt' => 'DESC']);
 
-    return $this->render('pages/home/home.html.twig', [
+    return $this->render('home/index.html.twig', [
         'contenus' => $contenus,
         'locale' => $locale,
         'temoignages' => $temoignages,
         'mode_edition' => true,
     ]);
 }
+
 
     #[Route('/admin/home/update', name: 'admin_home_update', methods: ['POST'])]
     public function update(Request $request, HomeRepository $homeRepository, EntityManagerInterface $em): JsonResponse
@@ -59,13 +59,13 @@ public function index(
 
         $key = $data['key'];
         $texte = $data['texte'];
-        $locale = $data['locale'];
+        $this->locale = $data['locale'];
 
-        $bloc = $homeRepository->findOneBy(['key' => $key, 'locale' => $locale]);
+        $bloc = $homeRepository->findOneBy(['key' => $key, 'locale' => $this->locale]);
         if (!$bloc) {
             $bloc = new Home();
             $bloc->setKey($key);
-            $bloc->setLocale($locale);
+            $bloc->setLocale($this->locale);
             $em->persist($bloc);
         }
 

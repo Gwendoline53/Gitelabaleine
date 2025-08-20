@@ -16,6 +16,8 @@ class LocaleListener
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
+        $locale = $request->attributes->get('locale', 'fr');
+        $request->setLocale($locale);
 
         if (!$request->hasPreviousSession()) {
             return;

@@ -4,13 +4,12 @@
 
 {% block body %}
     {{ render(path('app_navbar')) }}
-
-    {% if mode_edition|default(false) %}
-        <div class="locale-selector">
-            <a href="{{ path('admin_home', {locale: 'fr'}) }}">Français</a> |
-            <a href="{{ path('admin_home', {locale: 'en'}) }}">English</a>
-        </div>
-    {% endif %}
+{% if mode_edition|default(false) %}
+    <div class="locale-selectorhome">
+        <a href="{{ path('admin_home', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+        <a href="{{ path('admin_home', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+    </div>
+{% endif %}
 
     <div class="page-wrapper">
         <div class="logolabaleine"></div>
@@ -75,11 +74,7 @@
                 </div>
                 {% endfor %}
             </div>
-
-                      <!-- Pagination -->
                 <div class="swiper-pagination"></div>
-
-                <!-- Navigation flèches -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
                 </div>
@@ -94,26 +89,31 @@
         </div>
 
         <script>
-            document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-                el.addEventListener('blur', () => {
-                    const cle = el.dataset.cle;
-                    const texte = el.innerText.trim();
-                    const locale = '{{ app.request.locale }}';
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+    el.addEventListener('blur', () => {
+        console.log('Élément modifié :', el);
+        const cle = el.dataset.cle;
+        const texte = el.innerText.trim();
+        const locale = '{{ locale|default("fr") }}';
 
-                    fetch('{{ path("admin_home_update") }}', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.success) {
-                            alert('Erreur lors de la sauvegarde');
-                        }
-                    });
-                });
-            });
-        </script>
+        fetch('{{ path("admin_home_update") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert('Erreur lors de la sauvegarde');
+            }
+        });
+    });
+});
+document.getElementById('btn-validerhome').addEventListener('click', () => {
+        window.location.href = '{{ path("admin_gestion") }}';
+    });
+
+</script>
     {% endif %}
 
     {% include 'footer/index.html.twig' %}

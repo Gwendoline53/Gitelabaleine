@@ -13,46 +13,41 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class HomeController extends AbstractController
 {
+    private string $locale;
+
     #[Route('/', name: 'app_home')]
     public function index(
         HomeRepository $homeRepository,
         RequestStack $requestStack,
         Security $security,
         LogoutUrlGenerator $logoutUrlGenerator,
-        \App\Repository\TemoignageRepository $temoignageRepository // 🆕 Injecter le repo des témoignages
+        \App\Repository\TemoignageRepository $temoignageRepository
     ): Response {
-        // 🔐 Déconnexion automatique si ROLE_ADMIN
         if ($security->isGranted('ROLE_ADMIN')) {
             return new RedirectResponse($logoutUrlGenerator->getLogoutPath());
         }
 
-        // 🌐 Locale courante
-        $locale = $requestStack->getCurrentRequest()->getLocale();
+        $this->locale = $requestStack->getCurrentRequest()->getLocale(); // ✅ Initialisation
 
-        // 📦 Récupération des blocs traduits
-        $blocs = $homeRepository->findBy(['locale' => $locale]);
+        $blocs = $homeRepository->findBy(['locale' => $this->locale]);
 
-        // 🧩 Fallback si aucun bloc pour la locale
         if (!$blocs) {
             $blocs = $homeRepository->findBy(['locale' => 'fr']);
         }
 
-        // 🧷 Conversion en tableau clé => contenu
         $contenus = [];
         foreach ($blocs as $bloc) {
             $contenus[$bloc->getKey()] = $bloc->getContenu();
         }
 
-        // 📝 Récupération des témoignages approuvés pour la locale
         $temoignages = $temoignageRepository->findBy([
             'isApproved' => true,
-            'locale' => $locale,
+            'locale' => $this->locale,
         ], ['createdAt' => 'DESC']);
 
-        // 🎯 Rendu de la page d’accueil avec témoignages
         return $this->render('home/index.html.twig', [
             'contenus' => $contenus,
-            'locale' => $locale,
+            'locale' => $this->locale,
             'temoignages' => $temoignages,
             'mode_edition' => false,
         ]);
