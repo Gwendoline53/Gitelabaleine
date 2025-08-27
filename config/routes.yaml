@@ -10,4 +10,3 @@ app_connexionadmin:
 
 app_login_check:
     path: /connexionadmin/check
-

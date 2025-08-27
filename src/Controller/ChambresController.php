@@ -15,24 +15,20 @@ final class ChambresController extends AbstractController
         ChambresRepository $chambresRepository,
         RequestStack $requestStack
     ): Response {
-        // Récupère la locale courante (ex: 'fr' ou 'en')
+
         $locale = $requestStack->getCurrentRequest()->getLocale();
 
-        // Cherche les blocs de contenu pour cette locale
         $blocs = $chambresRepository->findBy(['locale' => $locale]);
 
-        // Fallback sur 'fr' si rien trouvé
         if (!$blocs) {
             $blocs = $chambresRepository->findBy(['locale' => 'fr']);
         }
 
-        // Transforme en tableau clé => contenu
         $contenus = [];
         foreach ($blocs as $bloc) {
             $contenus[$bloc->getKey()] = $bloc->getContenu();
         }
 
-        // Rend la page avec les contenus, sans mode édition
         return $this->render('chambres/index.html.twig', [
             'contenus' => $contenus,
             'mode_edition' => false,

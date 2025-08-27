@@ -21,8 +21,8 @@ final class ChambresAdminController extends AbstractController
         Request $request,
     ): Response {
         $locale = $request->query->get('locale', 'fr');
-
         $blocs = $chambresRepository->findBy(['locale' => $locale]);
+        
         if (!$blocs) {
             $blocs = $chambresRepository->findBy(['locale' => 'fr']);
         }

@@ -29,7 +29,7 @@ final class AboutAdminController extends AbstractController
 
         $contenus = [];
         foreach ($blocs as $bloc) {
-            $contenus[$bloc->getKey()] = $bloc->getContenu();
+            $contenus[$bloc->getcle()] = $bloc->getContenu();
         }
 
         return $this->render('about/index.html.twig', [ // ✅ chemin du template modifié

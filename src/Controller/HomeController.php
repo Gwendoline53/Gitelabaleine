@@ -1,53 +1,46 @@
 <?php
-
 namespace App\Controller;
 
 use App\Repository\HomeRepository;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Repository\TemoignageRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class HomeController extends AbstractController
 {
-    private string $locale;
-
     #[Route('/', name: 'app_home')]
     public function index(
         HomeRepository $homeRepository,
-        RequestStack $requestStack,
-        Security $security,
-        LogoutUrlGenerator $logoutUrlGenerator,
-        \App\Repository\TemoignageRepository $temoignageRepository
+        TemoignageRepository $temoignageRepository,
+        RequestStack $requestStack
     ): Response {
-        if ($security->isGranted('ROLE_ADMIN')) {
-            return new RedirectResponse($logoutUrlGenerator->getLogoutPath());
-        }
+        $locale = $requestStack->getCurrentRequest()->getLocale();
 
-        $this->locale = $requestStack->getCurrentRequest()->getLocale(); // ✅ Initialisation
+        // Récupère les blocs traduits
+        $blocs = $homeRepository->findBy(['locale' => $locale]);
 
-        $blocs = $homeRepository->findBy(['locale' => $this->locale]);
-
+        // Fallback en français si aucune traduction n'est trouvée
         if (!$blocs) {
             $blocs = $homeRepository->findBy(['locale' => 'fr']);
         }
 
+        // Crée un tableau associatif clé => contenu
         $contenus = [];
         foreach ($blocs as $bloc) {
             $contenus[$bloc->getKey()] = $bloc->getContenu();
         }
 
+        // Récupère les témoignages traduits
         $temoignages = $temoignageRepository->findBy([
             'isApproved' => true,
-            'locale' => $this->locale,
+            'locale' => $locale,
         ], ['createdAt' => 'DESC']);
 
         return $this->render('home/index.html.twig', [
             'contenus' => $contenus,
-            'locale' => $this->locale,
+            'locale' => $locale,
             'temoignages' => $temoignages,
             'mode_edition' => false,
         ]);

@@ -11,22 +11,23 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\MakerBundle\Str;
 
-#[IsGranted('ROLE_ADMIN')]
 class HomeAdminController extends AbstractController
 {
-    private string $locale;
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/admin/home', name: 'admin_home')]
 public function index(
     HomeRepository $homeRepository,
     Request $request,
     TemoignageRepository $temoignageRepository,
 ): Response {
-    $locale = $request->query->get('locale', 'fr');
-    $blocs = $homeRepository->findBy(['locale' => $locale]);
+     $locale = $request->query->get('locale', 'fr');
+
+        $blocs = $homeRepository->findBy(['locale' => $locale]);
 
     if (!$blocs) {
-        $blocs = [];
+         $blocs = $homeRepository->findBy(['locale' => 'fr']);
     }
 
     $contenus = [];
@@ -59,13 +60,13 @@ public function index(
 
         $key = $data['key'];
         $texte = $data['texte'];
-        $this->locale = $data['locale'];
+        $locale = $data['locale'];
 
-        $bloc = $homeRepository->findOneBy(['key' => $key, 'locale' => $this->locale]);
+        $bloc = $homeRepository->findOneBy(['key' => $key, 'locale' => $locale]);
         if (!$bloc) {
             $bloc = new Home();
             $bloc->setKey($key);
-            $bloc->setLocale($this->locale);
+            $bloc->setLocale($locale);
             $em->persist($bloc);
         }
 

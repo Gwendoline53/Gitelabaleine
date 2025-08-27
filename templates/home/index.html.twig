@@ -1,29 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil{% endblock %}
+{% block title %}{{ contenus.title|default('Accueil') }}{% endblock %}
 
 {% block body %}
-    {{ render(path('app_navbar')) }}
-{% if mode_edition|default(false) %}
-    <div class="locale-selectorhome">
-        <a href="{{ path('admin_home', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
-        <a href="{{ path('admin_home', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
-    </div>
-{% endif %}
+    {% set locale = locale|default('fr') %}
+    {{ render(path('app_navbar', { locale: locale })) }}
 
+    {% if mode_edition|default(false) %}
+        <div class="locale-selectorhome">
+            <a href="{{ path('admin_home', {locale: 'fr'}) }}" class="{{ locale == 'fr' ? 'active' : '' }}">Français</a> | 
+            <a href="{{ path('admin_home', {locale: 'en'}) }}" class="{{ locale == 'en' ? 'active' : '' }}">English</a>
+        </div>
+    {% endif %}
     <div class="page-wrapper">
         <div class="logolabaleine"></div>
         <div class="ecriturefond1"></div>
 
-        <button class="btnhome1" onclick="window.location.href='{{ path('app_decouvrir') }}'">{{ contenus.btnhome1|default('Découvrir')}}</button>
+        <button class="btnhome1" onclick="window.location.href='{{ path('app_decouvrir') }}'">
+            {{ contenus.btnhome1|default('Découvrir') }}
+        </button>
         <div class="textehd textehd1">
             <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="Textehd" {% endif %}>
-                {{ contenus.Textehd|default("Blotti entre les frondaisons d’une forêt douce et les embruns de la mer toute proche, notre gîte vous accueille à La Baleine, charmant village du département de la Manche (50450), où le temps semble ralentir au rythme des saisons.")|raw }}
+                {{ contenus.Textehd|raw }}
             </p>
         </div>
         <div class="image1"></div>
         <div class="ecriturefond2"></div>
-        <button class="btnhome2" onclick="window.location.href='{{ path('app_formulaire') }}'">{{ contenus.btnhome2|default('Réserver')}}</button>
+        <button class="btnhome2" onclick="window.location.href='{{ path('app_formulaire') }}'">
+            {{ contenus.btnhome2|default('Réserver') }}
+        </button>
         <div class="textehr textehdr">
             <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="Textehr" {% endif %}>
                 {{ contenus.Textehr|default("Réservez votre moment d'exception dès maintenant ! Envie de vous évader, de vous détendre ou simplement de vivre une expérience inoubliable ? Ne laissez pas passer l’occasion ! Nos places sont limitées — réservez aujourd’hui pour garantir la vôtre.")|raw }}
@@ -31,24 +36,26 @@
         </div>
         <div class="fleure"></div>
         <div class="image2"></div>
-        <button class="btnhome3" onclick="window.location.href='https://www.tourisme-en-france.com/fr/tourisme-france/ville-village-hameau-lieu-dit-bourg-departement-manche/66/24631'">{{ contenus.btnhome3|default('Activités & Alentours')}}</button>
+        <button class="btnhome3" onclick="window.location.href='https://www.tourisme-en-france.com'">
+            {{ contenus.btnhome3|default('Activités & Alentours') }}
+        </button>
         <div class="image3"></div>
         <div class="textehaa1 textehaa1">
             <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textehaa1" {% endif %}>
-                {{ contenus.textehaa1|default("Balade a la mer")|raw }}
+                {{ contenus.textehaa1|default("Balade à la mer")|raw }}
             </p>
         </div>
         <div class="coquelico"></div>
         <div class="image4"></div>
         <div class="textehaa2 textehaa2">
             <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textehaa2" {% endif %}>
-                {{ contenus.textehaa2|default("Ceuillette dans la nature")|raw }}
+                {{ contenus.textehaa2|default("Cueillette dans la nature")|raw }}
             </p>
         </div>
         <div class="image5"></div>
         <div class="textehaa3 textehaa3">
             <p {% if mode_edition|default(false) %} contenteditable="true" data-cle="textehaa3" {% endif %}>
-                {{ contenus.textehaa3|default("Balade en foret")|raw }}
+                {{ contenus.textehaa3|default("Balade en forêt")|raw }}
             </p>
         </div>
     </div>
@@ -81,7 +88,8 @@
             {% else %}
                 <p>Aucun témoignage pour le moment.</p>
             {% endif %}
-</div>
+        </div>
+    </div>
 
     {% if mode_edition|default(false) %}
         <div class="btn-containervaliderhome">
@@ -89,31 +97,46 @@
         </div>
 
         <script>
-    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+document.querySelectorAll('[contenteditable="true"]').forEach(el => {
     el.addEventListener('blur', () => {
         console.log('Élément modifié :', el);
-        const cle = el.dataset.cle;
+        const key = el.dataset.cle;
         const texte = el.innerText.trim();
         const locale = '{{ locale|default("fr") }}';
 
         fetch('{{ path("admin_home_update") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cle: cle, texte: texte, locale: locale })
+            body: JSON.stringify({ key: key, texte: texte, locale: locale })
         })
         .then(response => response.json())
         .then(data => {
             if (!data.success) {
                 alert('Erreur lors de la sauvegarde');
+            } else {
+                console.log('Sauvegarde réussie');
+                // On remet le texte pour s'assurer que c'est bien le texte sauvegardé
+                el.innerText = texte;
+                // Ajout d'une classe temporaire pour feedback visuel
+                el.classList.add('sauvegarde-ok');
+                setTimeout(() => {
+                    el.classList.remove('sauvegarde-ok');
+                }, 1500);
             }
+        })
+        .catch(error => {
+            console.error('Erreur fetch:', error);
         });
     });
 });
-document.getElementById('btn-validerhome').addEventListener('click', () => {
-        window.location.href = '{{ path("admin_gestion") }}';
-    });
 
+console.log("Script JS chargé");
+
+document.getElementById('btn-validerhome').addEventListener('click', () => {
+    window.location.href = '{{ path("admin_gestion") }}';
+});
 </script>
+
     {% endif %}
 
     {% include 'footer/index.html.twig' %}
@@ -121,33 +144,33 @@ document.getElementById('btn-validerhome').addEventListener('click', () => {
 
 {% block javascripts %}
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  new Swiper('.mySwiper', {
-    slidesPerView: 2,
-    spaceBetween: 30,
-    loop: true,
-    autoplay: {
-      delay: 4000,
-      disableOnInteraction: false,
-    },
-    pagination: {
-      el: '.swiper-pagination',
-      clickable: true,
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    speed: 800,
-    grabCursor: true,
-  });
-});
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        new Swiper('.mySwiper', {
+            slidesPerView: 2,
+            spaceBetween: 30,
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            speed: 800,
+            grabCursor: true,
+        });
+    });
 
-        // LANGUE
-        function changeLanguage(selectElement) {
-            const selectedLocale = selectElement.value;
-            window.location.href = '/change-locale/' + selectedLocale;
-        }
+    // LANGUE
+    function changeLanguage(selectElement) {
+        const selectedLocale = selectElement.value;
+        window.location.href = '/change-locale/' + selectedLocale;
+    }
     </script>
 {% endblock %}
